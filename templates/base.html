@@ -180,6 +180,107 @@
     });
 </script>
 
+<script>
+    $(document).ready(function () {
+
+        $(document).on("click", ".favorite-button", function (e) {
+
+            e.preventDefault();
+
+            let button = $(this);
+            let icon = button.find(".favorite-icon");
+            let tooltip = button.find(".favorite-tooltip");
+
+            let url = button.data("url");
+
+            let csrfToken = $("input[name='csrfmiddlewaretoken']").first().val();
+
+            $.ajax({
+
+                url: url,
+                type: "POST",
+
+                data: {
+                    csrfmiddlewaretoken: csrfToken
+                },
+
+                success: function (result) {
+
+                    if (result.action === "added") {
+
+                        button.attr("data-favorite", "true");
+
+                        icon
+                            .removeClass("fill-zinc-700")
+                            .addClass("fill-red-500");
+
+                        icon.html(`
+                            <path d="M128,216S28,160,28,88A52,52,0,0,1,128,64,52,52,0,0,1,228,88C228,160,128,216,128,216Z"></path>
+                        `);
+
+                        tooltip.text("حذف از علاقه مندی ها");
+
+                    } else if (result.action === "removed") {
+
+                        button.attr("data-favorite", "false");
+
+                        icon
+                            .removeClass("fill-red-500")
+                            .addClass("fill-zinc-700");
+
+                        icon.html(`
+                            <path d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"></path>
+                        `);
+
+                        tooltip.text("افزودن به علاقه مندی ها");
+
+                    }
+
+                    Toastify({
+                        text: result.message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: result.action === "added"
+                                ? "#22c55e"
+                                : "#1d9ded"
+                        }
+                    }).showToast();
+
+                },
+
+                error: function (xhr) {
+
+                    let message = "خطایی رخ داد.";
+
+                    if (
+                        xhr.responseJSON &&
+                        xhr.responseJSON.message
+                    ) {
+                        message = xhr.responseJSON.message;
+                    }
+
+                    Toastify({
+                        text: message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: "#ef4444"
+                        }
+                    }).showToast();
+
+                }
+
+            });
+
+        });
+
+    });
+</script>
+
+
 {% include 'messages.html' %}
 
 {% block extra_js %}  {% endblock %}

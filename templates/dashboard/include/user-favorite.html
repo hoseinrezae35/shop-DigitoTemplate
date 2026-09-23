@@ -1,0 +1,213 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="bg-white rounded-2xl min-h-80 h-auto shadow-custom p-4">
+
+        <!-- Breadcrumb / Header -->
+        <div class="px-2 md:px-3 pt-3 pb-5 mb-3 text-zinc-700 text-sm md:text-base flex items-center justify-between border-b border-zinc-200">
+            <div class="flex items-center gap-x-2">
+                <svg class="fill-primary-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill=""
+                     viewBox="0 0 256 256">
+                    <path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"></path>
+                </svg>
+
+                علاقه‌مندی‌های من
+            </div>
+
+            <span id="favorite-total-count"
+                  class="text-xs text-zinc-400 bg-zinc-100 px-3 py-1 rounded-full">
+                {{ total_items }} محصول
+            </span>
+        </div>
+
+
+        <!-- Products Grid -->
+        <div id="favorite-products-grid"
+             class="grid grid-cols-2 lg:grid-cols-3 gap-3">
+
+            {% for product in favorite_products %}
+
+                <div id="favorite-product-{{ product.pk }}"
+                     class="p-2 md:p-4 hover:border-transparent hover:shadow-lg transition-shadow rounded-3xl border border-zinc-100 relative">
+
+                    <!-- Remove From Favorite -->
+                    <button type="button"
+                            class="remove-favorite absolute right-2 top-2 flex items-center justify-center bg-white hover:bg-red-500 text-red-500 hover:text-white transition-all duration-200 rounded-full border border-zinc-300 hover:border-red-500 size-9"
+                            data-url="{% url 'dashboard:remove-favorite' pk=product.pk %}"
+                            aria-label="حذف از علاقه‌مندی‌ها"
+                            title="حذف از علاقه‌مندی‌ها">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="18"
+                             height="18"
+                             fill="currentColor"
+                             viewBox="0 0 256 256">
+                            <path d="M216,48H176V40a24.03,24.03,0,0,0-24-24H104A24.03,24.03,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16.02,16.02,0,0,0,16,16H192a16.02,16.02,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8.01,8.01,0,0,1,8-8h48a8.01,8.01,0,0,1,8,8v8H96ZM192,208H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Product Image -->
+                    <a href="{% url 'shop:product-detail' pk=product.pk %}"
+                       class="image-box mb-6 block py-10">
+
+                        <img class="max-w-28 md:max-w-40 mx-auto"
+                             src="{{ product.primary_image }}"
+                             alt="{{ product.name }}">
+                    </a>
+
+
+                    <!-- Product Name -->
+                    <a href="{% url 'shop:product-detail' pk=product.pk %}"
+                       class="text-xs md:text-sm font-semibold text-zinc-700 h-10 line-clamp-2">
+
+                        {{ product.name }}
+
+                    </a>
+
+
+                    <div class="border-b-2 border-dashed border-zinc-200 my-5 w-full h-auto"></div>
+
+                    <div class="flex justify-center items-center">
+
+                        <a href="{% url 'shop:product-detail' pk=product.pk %}"
+                           class="flex items-center justify-center w-full md:w-auto px-6 py-2.5 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm md:text-base font-yekanBakhBold transition-all duration-200 shadow-sm hover:shadow-md">
+                            مشاهده محصول
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+                <!-- Empty State -->
+                <div class="col-span-2 lg:col-span-3 flex flex-col items-center justify-center text-center py-16 sm:py-20 px-4 w-full">
+
+                    <svg class="fill-zinc-300 mb-5 w-16 h-16 sm:w-20 sm:h-20"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 256 256">
+
+                        <path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"></path>
+
+                    </svg>
+
+                    <h3 class="text-zinc-600 font-yekanBakhBold text-base sm:text-lg mb-2">
+                        لیست علاقه‌مندی‌های شما خالی است
+                    </h3>
+
+                    <p class="text-zinc-400 text-xs sm:text-sm mb-6 max-w-md leading-6">
+                        هنوز محصولی به علاقه‌مندی‌های خود اضافه نکرده‌اید.
+                    </p>
+
+                    <a href="{% url 'shop:product-list' %}"
+                       class="inline-flex items-center justify-center bg-primary-500 hover:bg-primary-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm transition-all duration-200 hover:shadow-md">
+                        مشاهده محصولات
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        $(document).on('click', '.remove-favorite', function () {
+
+            const button = $(this);
+            const url = button.data('url');
+            const productCard = button.closest('[id^="favorite-product-"]');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+
+                beforeSend: function () {
+                    button.prop('disabled', true);
+                },
+
+                success: function (response) {
+
+                    if (response.status === 'success') {
+
+                        productCard.fadeOut(250, function () {
+                            $(this).remove();
+
+                            $('#favorite-total-count').text(
+                                response.favorite_count + ' محصول'
+                            );
+
+                            if ($('#favorite-products-grid .remove-favorite').length === 0) {
+
+                                $('#favorite-products-grid').html(`
+                                    <div class="col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 text-center">
+
+                                        <svg class="fill-zinc-300 mb-5"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             width="80"
+                                             height="80"
+                                             viewBox="0 0 256 256">
+
+                                            <path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"></path>
+
+                                        </svg>
+
+                                        <h3 class="text-zinc-600 font-yekanBakhBold text-lg mb-2">
+                                            لیست علاقه‌مندی‌های شما خالی است
+                                        </h3>
+
+                                        <p class="text-zinc-400 text-sm mb-6">
+                                            هنوز محصولی به علاقه‌مندی‌های خود اضافه نکرده‌اید.
+                                        </p>
+
+                                        <a href="{% url 'shop:product-list' %}"
+                                           class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl text-sm transition-colors duration-200">
+                                            مشاهده محصولات
+                                        </a>
+
+                                    </div>
+                                `);
+                            }
+                        });
+
+                        Toastify({
+                            text: response.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            backgroundColor: "#22c55e",
+                        }).showToast();
+                    }
+                },
+
+                error: function (xhr) {
+
+                    button.prop('disabled', false);
+
+                    let message = 'خطایی رخ داد. دوباره تلاش کنید.';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message;
+                    }
+
+                    Toastify({
+                        text: message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "#ef4444",
+                    }).showToast();
+                }
+            });
+
+        });
+    </script>
+{% endblock %}
+

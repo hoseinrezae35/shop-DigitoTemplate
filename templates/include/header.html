@@ -87,12 +87,12 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="py-3 px-4 hover:bg-gray-100 rounded-lg block">
+                        <a href="{% url 'abouts:about-me' %}" class="py-3 px-4 hover:bg-gray-100 rounded-lg block">
                             درباره ما
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="py-3 px-4 hover:bg-gray-100 rounded-lg block">
+                        <a href="{% url 'contactus:contact' %}" class="py-3 px-4 hover:bg-gray-100 rounded-lg block">
                             تماس با ما
                         </a>
                     </li>
@@ -250,7 +250,7 @@
                     وبلاگ
                 </li>
             </a>
-            <a href="#" class="pt-1 flex gap-x-2 items-center group relative">
+            <a href="{% url 'abouts:about-me' %}" class="pt-1 flex gap-x-2 items-center group relative">
                 <li class="relative text-zinc-600 text-sm group-hover:text-primary-500 transition pb-2
             after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]
             after:bg-primary-500 after:scale-x-0 after:origin-right after:transition-transform after:duration-300
@@ -258,7 +258,7 @@
                     درباره ما
                 </li>
             </a>
-            <a href="#" class="pt-1 flex gap-x-2 items-center group relative">
+            <a href="{% url 'contactus:contact' %}" class="pt-1 flex gap-x-2 items-center group relative">
                 <li class="relative text-zinc-600 text-sm group-hover:text-primary-500 transition pb-2
             after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]
             after:bg-primary-500 after:scale-x-0 after:origin-right after:transition-transform after:duration-300

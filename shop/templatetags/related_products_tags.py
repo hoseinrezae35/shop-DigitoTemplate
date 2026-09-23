@@ -1,15 +1,15 @@
 from django import template
-from shop.models import Product
+from shop.models import Product, ProductFavorite
 
 register = template.Library()
 
 
-@register.inclusion_tag("include/related_products.html")
-def show_related_products(product, limit=8):
+@register.inclusion_tag("include/related_products.html", takes_context=True)
+def show_related_products(context, product):
 
     category_ids = product.category.get_descendant_ids()
 
-    products = (
+    products = list(
         Product.objects
         .select_related("category")
         .filter(
@@ -17,9 +17,23 @@ def show_related_products(product, limit=8):
             is_available=True
         )
         .exclude(pk=product.pk)
-        .order_by("-created_at")[:limit]
+        .order_by("-created_at")
     )
 
+    favorite_product_ids = set()
+
+    request = context["request"]
+
+    if request.user.is_authenticated:
+        favorite_product_ids = set(
+            ProductFavorite.objects.filter(
+                user=request.user,
+                product_id__in=[p.id for p in products]
+            ).values_list("product_id", flat=True)
+        )
+
     return {
-        "r_products": products
+        "r_products": products[:8],
+        "product": product,
+        "favorite_product_ids": favorite_product_ids,
     }

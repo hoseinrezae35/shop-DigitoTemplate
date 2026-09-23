@@ -9,19 +9,61 @@
             <!-- photo -->
             <div class="lg:w-4/12">
                 <div class="flex gap-x-5 pr-10">
-                    <a href="#" class="relative">
+                    <a
+                            href="#"
+                            class="favorite-button relative"
+                            data-url="{% url 'shop:product-favorite' pk=product.pk %}"
+                            data-favorite="{% if is_favorite %}true{% else %}false{% endif %}"
+                    >
+
                         <div class="group cursor-pointer relative inline-block text-center">
-                            <svg class="fill-zinc-700 hover:fill-red-400 transition" xmlns="http://www.w3.org/2000/svg"
-                                 width="26" height="26" fill="" viewbox="0 0 256 256">
-                                <path d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"></path>
+
+                            <svg
+                                    class="favorite-icon {% if is_favorite %}fill-red-500{% else %}fill-zinc-700{% endif %} hover:fill-red-400 transition"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="26"
+                                    height="26"
+                                    viewbox="0 0 256 256"
+                            >
+                                {% if is_favorite %}
+
+                                    <!-- قلب پر -->
+                                    <path d="M128,216S28,160,28,88A52,52,0,0,1,128,64,52,52,0,0,1,228,88C228,160,128,216,128,216Z"></path>
+
+                                {% else %}
+
+                                    <!-- قلب خالی -->
+                                    <path d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"></path>
+
+                                {% endif %}
                             </svg>
-                            <div class="opacity-0 w-28 transition-all bg-zinc-800 text-white text-center text-xs rounded-lg py-2 absolute z-10 -left-11 group-hover:opacity-100 px-3 pointer-events-none">
-                                افزودن به علاقه مندی ها
-                                <svg class="absolute text-black h-2 w-full left-0 bottom-full rotate-180" x="0px"
-                                     y="0px" viewbox="0 0 255 255" xml:space="preserve"><polygon class="fill-current" points="0,0 127.5,127.5 255,0"></polygon></svg>
+
+                            <div
+                                    class="favorite-tooltip opacity-0 w-28 transition-all bg-zinc-800 text-white text-center text-xs rounded-lg py-2 absolute z-10 -left-11 group-hover:opacity-100 px-3 pointer-events-none">
+
+                                {% if is_favorite %}
+                                    حذف از علاقه مندی ها
+                                {% else %}
+                                    افزودن به علاقه مندی ها
+                                {% endif %}
+
+                                <svg
+                                        class="absolute text-black h-2 w-full left-0 bottom-full rotate-180"
+                                        x="0px"
+                                        y="0px"
+                                        viewbox="0 0 255 255"
+                                        xml:space="preserve"
+                                >
+                                        <polygon
+                                                class="fill-current"
+                                                points="0,0 127.5,127.5 255,0">
+                                        </polygon>
+                                </svg>
                             </div>
                         </div>
+
                     </a>
+
                     <a href="#" class="relative" onclick="copyToClipboard(event)">
                         <div class="group cursor-pointer relative inline-block text-center">
                             <svg class="fill-zinc-700 hover:fill-zinc-800 transition" xmlns="http://www.w3.org/2000/svg"
@@ -329,118 +371,181 @@
             </p>
             <div class="lg:flex gap-5">
                 <div class="lg:w-3/12 py-5">
-                    <div class="mt-4 mb-2 text-sm text-zinc-700">
-                        شما هم دیدگاه خود را ثبت کنید
-                    </div>
-                    <ul class="grid my-3 gap-5 grid-cols-2">
-                        <li>
-                            <input type="radio" id="yes" name="hosting" value="yes" class="hidden peer" required="">
-                            <label for="yes"
-                                   class="inline-flex items-center justify-center w-full px-2 py-3 text-gray-600 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-green-400 peer-checked:text-green-500 hover:text-gray-600 hover:bg-gray-100">
-                                <div class="flex items-center gap-x-1">
-                                    <svg class="fill-green-500" xmlns="http://www.w3.org/2000/svg" width="22"
-                                         height="22" fill="" viewbox="0 0 256 256">
-                                        <path d="M234,80.12A24,24,0,0,0,216,72H160V56a40,40,0,0,0-40-40,8,8,0,0,0-7.16,4.42L75.06,96H32a16,16,0,0,0-16,16v88a16,16,0,0,0,16,16H204a24,24,0,0,0,23.82-21l12-96A24,24,0,0,0,234,80.12ZM32,112H72v88H32ZM223.94,97l-12,96a8,8,0,0,1-7.94,7H88V105.89l36.71-73.43A24,24,0,0,1,144,56V80a8,8,0,0,0,8,8h64a8,8,0,0,1,7.94,9Z"></path>
-                                    </svg>
-                                    <div class="text-sm">پیشنهاد میشود</div>
-                                </div>
-                            </label>
-                        </li>
-                        <li>
-                            <input type="radio" id="no" name="hosting" value="no" class="hidden peer" required="">
-                            <label for="no"
-                                   class="inline-flex items-center justify-center w-full px-2 py-3 text-gray-600 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-red-400 peer-checked:text-red-400 hover:text-gray-600 hover:bg-gray-100">
-                                <div class="flex items-center gap-x-1">
-                                    <svg class="fill-red-500" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                                         fill="" viewbox="0 0 256 256">
-                                        <path d="M239.82,157l-12-96A24,24,0,0,0,204,40H32A16,16,0,0,0,16,56v88a16,16,0,0,0,16,16H75.06l37.78,75.58A8,8,0,0,0,120,240a40,40,0,0,0,40-40V184h56a24,24,0,0,0,23.82-27ZM72,144H32V56H72Zm150,21.29a7.88,7.88,0,0,1-6,2.71H152a8,8,0,0,0-8,8v24a24,24,0,0,1-19.29,23.54L88,150.11V56H204a8,8,0,0,1,7.94,7l12,96A7.87,7.87,0,0,1,222,165.29Z"></path>
-                                    </svg>
-                                    <div class="text-sm">پیشنهاد نمیشود</div>
-                                </div>
-                            </label>
-                        </li>
-                    </ul>
-                    <textarea placeholder="متن دیدگاه" name="mailTicket" cols="30" rows="7"
-                              class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-white border border-zinc-200 px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300"></textarea>
-                    <button class="hidden lg:block mx-auto cursor-pointer w-full px-2 py-3 text-sm bg-gradient-to-bl from-primary-500 to-primary-400 hover:opacity-90 transition text-gray-100 rounded-lg">
-                        ارسال دیدگاه
-                    </button>
+
+                    <form id="comment-form">
+
+                        {% csrf_token %}
+
+                        <div class="mt-4 mb-2 text-sm text-zinc-700">
+                            شما هم دیدگاه خود را ثبت کنید
+                        </div>
+
+                        <ul class="grid my-3 gap-5 grid-cols-2">
+                            <li>
+                                <input
+                                        type="radio"
+                                        id="yes"
+                                        name="recommendation"
+                                        value="recommended"
+                                        class="hidden peer">
+
+                                <label
+                                        for="yes"
+                                        class="inline-flex items-center justify-center w-full px-2 py-3 text-gray-600 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-green-400 peer-checked:text-green-500 hover:text-gray-600 hover:bg-gray-100">
+
+                                    <div class="flex items-center gap-x-1">
+
+                                        <svg class="fill-green-500"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             width="22"
+                                             height="22"
+                                             viewbox="0 0 256 256">
+
+                                            <path d="M234,80.12A24,24,0,0,0,216,72H160V56a40,40,0,0,0-40-40,8,8,0,0,0-7.16,4.42L75.06,96H32a16,16,0,0,0-16,16v88a16,16,0,0,0,16,16H204a24,24,0,0,0,23.82-21l12-96A24,24,0,0,0,234,80.12ZM32,112H72v88H32ZM223.94,97l-12,96a8,8,0,0,1-7.94,7H88V105.89l36.71-73.43A24,24,0,0,1,144,56V80a8,8,0,0,0,8,8h64a8,8,0,0,1,7.94,9Z"></path>
+
+                                        </svg>
+
+                                        <div class="text-sm">
+                                            پیشنهاد میشود
+                                        </div>
+
+                                    </div>
+
+                                </label>
+                            </li>
+
+                            <li>
+                                <input
+                                        type="radio"
+                                        id="no"
+                                        name="recommendation"
+                                        value="not_recommended"
+                                        class="hidden peer">
+
+                                <label
+                                        for="no"
+                                        class="inline-flex items-center justify-center w-full px-2 py-3 text-gray-600 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-red-400 peer-checked:text-red-400 hover:text-gray-600 hover:bg-gray-100">
+
+                                    <div class="flex items-center gap-x-1">
+
+                                        <svg class="fill-red-500"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             width="22"
+                                             height="22"
+                                             viewbox="0 0 256 256">
+
+                                            <path d="M239.82,157l-12-96A24,24,0,0,0,204,40H32A16,16,0,0,0,16,56v88a16,16,0,0,0,16,16H75.06l37.78,75.58A8,8,0,0,0,120,240a40,40,0,0,0,40-40V184h56a24,24,0,0,0,23.82-27ZM72,144H32V56H72Zm150,21.29a7.88,7.88,0,0,1-6,2.71H152a8,8,0,0,0-8,8v24a24,24,0,0,1-19.29,23.54L88,150.11V56H204a8,8,0,0,1,7.94,7l12,96A7.87,7.87,0,0,1,222,165.29Z"></path>
+
+                                        </svg>
+
+                                        <div class="text-sm">
+                                            پیشنهاد نمیشود
+                                        </div>
+
+                                    </div>
+
+                                </label>
+                            </li>
+                        </ul>
+
+                        <textarea
+                                placeholder="متن دیدگاه"
+                                id="comment-text"
+                                name="text"
+                                cols="30"
+                                rows="7"
+                                class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-white border border-zinc-200 px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300"></textarea>
+
+                        <button
+                                type="submit"
+                                id="submit-comment"
+                                data-url="{% url 'shop:add-product-comment' pk=product.pk %}"
+                                class="block mx-auto cursor-pointer w-full px-2 py-3 mt-3 text-sm bg-gradient-to-bl from-primary-500 to-primary-400 hover:opacity-90 transition text-gray-100 rounded-lg">
+
+                            ارسال دیدگاه
+
+                        </button>
+
+                    </form>
+
                 </div>
-                <div class="lg:w-9/12 divide-y-2 divide-zinc-300">
-                    <div class="px-2 pt-5">
-                        <div class="text-lg text-zinc-700">
-                            خوب بود ارزش خرید داره
-                        </div>
-                        <div class="mt-2 flex gap-x-4 items-center border-b border-zinc-200 pb-3">
-                            <div class="text-xs text-zinc-600">
-                                11 بهمن 1402
+
+                <div class="w-full lg:w-9/12">
+
+                    {% for comment in comments %}
+
+                        <div class="px-3 sm:px-4 py-5 mb-4 rounded-xl bg-white border border-zinc-200 shadow-sm">
+
+                            <!-- متن کامنت -->
+                            <p class="text-base sm:text-lg text-zinc-700 leading-7 break-words">
+                                {{ comment.text }}
+                            </p>
+
+                            <!-- اطلاعات کاربر و تاریخ -->
+                            <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500">
+
+                                <span class="inline-flex items-center gap-1">
+                                    <!-- آیکون کاربر -->
+                                    <svg class="w-4 h-4 fill-zinc-400" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 256 256">
+                                        <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+                                    </svg>
+                                    {{ comment.user.user_profile.get_fullname }}
+                                </span>
+
+                                <span class="text-zinc-300 hidden sm:inline">|</span>
+
+                                <span class="inline-flex items-center gap-1">
+                                    <!-- آیکون تقویم -->
+                                    <svg class="w-4 h-4 fill-zinc-400" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 256 256">
+                                        <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"></path>
+                                    </svg>
+                                    {{ comment.created_at|date:"Y/m/d" }}
+                                </span>
+
                             </div>
-                            <div class="text-xs text-zinc-600">
-                                امیررضا کریمی
+
+                            <!-- وضعیت پیشنهاد -->
+                            <div class="mt-3">
+                                {% if comment.recommendation == "recommended" %}
+                                    <span class="inline-flex items-center gap-2 rounded-full bg-gradient-to-l from-green-500 to-emerald-500 text-white text-sm font-medium px-4 py-2 shadow-md shadow-green-200">
+                                        <svg class="w-4 h-4 fill-white" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 256 256">
+                                            <path d="M234,80.12A24,24,0,0,0,216,72H160V56a40,40,0,0,0-40-40,8,8,0,0,0-7.16,4.42L75.06,96H32a16,16,0,0,0-16,16v88a16,16,0,0,0,16,16H204a24,24,0,0,0,23.82-21l12-96A24,24,0,0,0,234,80.12ZM32,112H72v88H32ZM223.94,97l-12,96a8,8,0,0,1-7.94,7H88V105.89l36.71-73.43A24,24,0,0,1,144,56V80a8,8,0,0,0,8,8h64a8,8,0,0,1,7.94,9Z"></path>
+                                        </svg>
+                                        پیشنهاد می‌شود
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-2 rounded-full bg-gradient-to-l from-red-500 to-rose-500 text-white text-sm font-medium px-4 py-2 shadow-md shadow-red-200">
+                                        <svg class="w-4 h-4 fill-white" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 256 256">
+                                            <path d="M234,175.88A24,24,0,0,1,216,184H160v16a40,40,0,0,1-40,40,8,8,0,0,1-7.16-4.42L75.06,160H32a16,16,0,0,1-16-16V56A16,16,0,0,1,32,40H204a24,24,0,0,1,23.82,21l12,96A24,24,0,0,1,234,175.88ZM32,144H72V56H32ZM223.94,159l-12-96a8,8,0,0,0-7.94-7H88v94.11l36.71,73.43A24,24,0,0,0,144,200V176a8,8,0,0,1,8-8h64a8,8,0,0,0,7.94-9Z"></path>
+                                        </svg>
+                                        پیشنهاد نمی‌شود
+                                    </span>
+                                {% endif %}
                             </div>
 
                         </div>
-                        <div class="flex items-center gap-x-1 pt-3">
-                            <svg class="fill-green-500" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                                 fill="" viewbox="0 0 256 256">
-                                <path d="M234,80.12A24,24,0,0,0,216,72H160V56a40,40,0,0,0-40-40,8,8,0,0,0-7.16,4.42L75.06,96H32a16,16,0,0,0-16,16v88a16,16,0,0,0,16,16H204a24,24,0,0,0,23.82-21l12-96A24,24,0,0,0,234,80.12ZM32,112H72v88H32ZM223.94,97l-12,96a8,8,0,0,1-7.94,7H88V105.89l36.71-73.43A24,24,0,0,1,144,56V80a8,8,0,0,0,8,8h64a8,8,0,0,1,7.94,9Z"></path>
-                            </svg>
-                            <div class="text-sm text-green-500">پیشنهاد میشود</div>
-                        </div>
-                        <div class="mt-2 text-zinc-600 text-sm"></div>
-                        <div class="mt-2 text-zinc-600 text-sm"></div>
-                    </div>
-                    <div class="px-2 pt-5">
-                        <div class="text-lg text-zinc-700">
-                            خوب بود ارزش خرید داره
-                        </div>
-                        <div class="mt-2 flex gap-x-4 items-center border-b border-zinc-200 pb-3">
-                            <div class="text-xs text-zinc-600">
-                                11 بهمن 1402
-                            </div>
-                            <div class="text-xs text-zinc-600">
-                                امیررضا کریمی
-                            </div>
 
-                        </div>
-                        <div class="flex items-center gap-x-1 pt-3">
-                            <svg class="fill-green-500" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                                 fill="" viewbox="0 0 256 256">
-                                <path d="M234,80.12A24,24,0,0,0,216,72H160V56a40,40,0,0,0-40-40,8,8,0,0,0-7.16,4.42L75.06,96H32a16,16,0,0,0-16,16v88a16,16,0,0,0,16,16H204a24,24,0,0,0,23.82-21l12-96A24,24,0,0,0,234,80.12ZM32,112H72v88H32ZM223.94,97l-12,96a8,8,0,0,1-7.94,7H88V105.89l36.71-73.43A24,24,0,0,1,144,56V80a8,8,0,0,0,8,8h64a8,8,0,0,1,7.94,9Z"></path>
-                            </svg>
-                            <div class="text-sm text-green-500">پیشنهاد میشود</div>
-                        </div>
-                        <div class="mt-2 text-zinc-600 text-sm"></div>
-                        <div class="mt-2 text-zinc-600 text-sm"></div>
-                    </div>
-                    <div class="px-2 pt-5">
-                        <div class="text-lg text-zinc-700">
-                            خوب بود ارزش خرید داره
-                        </div>
-                        <div class="mt-2 flex gap-x-4 items-center border-b border-zinc-200 pb-3">
-                            <div class="text-xs text-zinc-600">
-                                11 بهمن 1402
-                            </div>
-                            <div class="text-xs text-zinc-600">
-                                امیررضا کریمی
-                            </div>
+                    {% empty %}
 
-                        </div>
-                        <div class="flex items-center gap-x-1 pt-3">
-                            <svg class="fill-green-500" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                                 fill="" viewbox="0 0 256 256">
-                                <path d="M234,80.12A24,24,0,0,0,216,72H160V56a40,40,0,0,0-40-40,8,8,0,0,0-7.16,4.42L75.06,96H32a16,16,0,0,0-16,16v88a16,16,0,0,0,16,16H204a24,24,0,0,0,23.82-21l12-96A24,24,0,0,0,234,80.12ZM32,112H72v88H32ZM223.94,97l-12,96a8,8,0,0,1-7.94,7H88V105.89l36.71-73.43A24,24,0,0,1,144,56V80a8,8,0,0,0,8,8h64a8,8,0,0,1,7.94,9Z"></path>
+                        <div class="px-3 sm:px-4 py-10 text-center text-sm text-zinc-500">
+                            <svg class="w-12 h-12 mx-auto mb-3 fill-zinc-300" xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 256 256">
+                                <path d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"></path>
                             </svg>
-                            <div class="text-sm text-green-500">پیشنهاد میشود</div>
+                            هنوز دیدگاهی برای این محصول ثبت نشده است.
                         </div>
-                        <div class="mt-2 text-zinc-600 text-sm"></div>
-                        <div class="mt-2 text-zinc-600 text-sm"></div>
-                    </div>
+
+                    {% endfor %}
+
                 </div>
             </div>
         </div>
     </div>
-    <!-- sldier products -->
+    <!-- slidier products -->
     {% show_related_products product %}
 {% endblock %}
 
@@ -475,6 +580,132 @@
 
             let product_id = $(this).data("product-id");
             addCartItem(product_id);
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $("#comment-form").on("submit", function (e) {
+
+                e.preventDefault();
+
+                let form = $(this);
+                let button = $("#submit-comment");
+
+                let url = button.data("url");
+
+                let text = $("#comment-text").val().trim();
+
+                let recommendation = $("input[name='recommendation']:checked").val();
+
+                let csrfToken = form.find("input[name='csrfmiddlewaretoken']").val();
+
+
+                if (!recommendation) {
+
+                    Toastify({
+                        text: "لطفاً پیشنهاد یا عدم پیشنهاد را انتخاب کنید.",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: "#ef4444"
+                        }
+                    }).showToast();
+
+                    return;
+                }
+
+
+                if (!text) {
+
+                    Toastify({
+                        text: "لطفاً متن دیدگاه را وارد کنید.",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: "#ef4444"
+                        }
+                    }).showToast();
+
+                    return;
+                }
+
+
+                button.prop("disabled", true);
+                button.text("در حال ارسال...");
+
+
+                $.ajax({
+
+                    url: url,
+
+                    type: "POST",
+
+                    data: {
+                        text: text,
+                        recommendation: recommendation,
+                        csrfmiddlewaretoken: csrfToken
+                    },
+
+
+                    success: function (result) {
+
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "#22c55e"
+                            }
+                        }).showToast();
+
+
+                        // خالی کردن فرم
+                        $("#comment-text").val("");
+
+                        $("input[name='recommendation']")
+                            .prop("checked", false);
+
+
+                        button.prop("disabled", false);
+
+                        button.text("ارسال دیدگاه");
+                    },
+
+
+                    error: function (xhr) {
+
+                        let message = "خطایی در ثبت دیدگاه رخ داد.";
+
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+
+                        Toastify({
+                            text: message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "#ef4444"
+                            }
+                        }).showToast();
+
+
+                        button.prop("disabled", false);
+
+                        button.text("ارسال دیدگاه");
+                    }
+
+                });
+
+            });
+
         });
     </script>
 {% endblock %}

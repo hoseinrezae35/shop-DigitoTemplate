@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Category, Color, Size, Product, ProductImage
+from .models import Category, Color, Size, Product, ProductImage, ProductComment
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -181,6 +181,81 @@ class ProductImageAdmin(admin.ModelAdmin):
         return '-'
 
     image_preview.short_description = 'تصویر'
+
+
+@admin.register(ProductComment)
+class ProductCommentAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "product",
+        "user",
+        "title",
+        "recommendation",
+        "is_active",
+        "created_at",
+    )
+
+    list_filter = (
+        "recommendation",
+        "is_active",
+        "created_at",
+    )
+
+    search_fields = (
+        "title",
+        "text",
+        "user__email",
+        "product__name",
+    )
+
+    list_editable = (
+        "is_active",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+    list_per_page = 20
+
+
+from django.contrib import admin
+
+from .models import ProductFavorite
+
+
+@admin.register(ProductFavorite)
+class ProductFavoriteAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "product",
+        "created_at",
+    )
+
+    list_filter = (
+        "created_at",
+    )
+
+    search_fields = (
+        "user__email",
+        "product__name",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+    readonly_fields = (
+        "created_at",
+    )
+
+    list_per_page = 20
 
 
 admin.site.register(Category, CategoryAdmin)

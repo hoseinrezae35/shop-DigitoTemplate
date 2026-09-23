@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>جزئیات سفارش | دیجیتو</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f8f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .digito-card-red {
+            max-width: 1100px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(180, 30, 30, 0.15);
+            padding: 2rem 2.5rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* دکوراسیون قرمز */
+        .digito-card-red::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, #dc26260a, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .digito-card-red > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* هدر با لوگو و دکمه بازگشت */
+        .digito-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #f0e8e8;
+            padding-bottom: 1.2rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon-red {
+            background: linear-gradient(145deg, #dc2626, #b91c1c);
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 26px;
+            box-shadow: 0 10px 20px -8px #dc262666;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #1e1e2f, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text span {
+            font-weight: 300;
+            -webkit-text-fill-color: #a07a7a;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fdf0f0;
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            color: #991b1b;
+            font-weight: 600;
+            border: 1px solid #fad7d7;
+            transition: 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-btn i {
+            font-size: 1rem;
+            color: #dc2626;
+        }
+
+        .back-btn:hover {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        .back-btn:hover i {
+            color: white;
+        }
+
+        /* بخش عنوان سفارش */
+        .order-title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .order-title-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f1a2e;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .order-title-section h1 i {
+            color: #dc2626;
+            font-size: 1.8rem;
+        }
+
+        .order-title-section .status-badge-large {
+            padding: 0.5rem 2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #e1f7e8;
+            color: #0b6e3b;
+        }
+
+        .status-badge-large i {
+            font-size: 1.1rem;
+        }
+
+        .status-delivered-red {
+            background: #e1f7e8;
+            color: #0b6e3b;
+        }
+
+        /* گرید اطلاعات سفارش */
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            background: #fcf8f8;
+            padding: 1.8rem 2rem;
+            border-radius: 28px;
+            border: 1px solid #f5eaea;
+            margin-bottom: 2.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .detail-item .label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #8a7a7a;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .detail-item .value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e1a2b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-item .value i {
+            color: #dc2626;
+            width: 20px;
+            font-size: 1rem;
+        }
+
+        .detail-item .value .sub {
+            font-weight: 400;
+            color: #7a6a6a;
+            font-size: 0.9rem;
+        }
+
+        /* لیست محصولات */
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.8rem 0 1.2rem 0;
+        }
+
+        .products-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f1a2e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .products-header h3 i {
+            color: #dc2626;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .products-table th {
+            text-align: right;
+            padding: 0.8rem 1.2rem;
+            font-weight: 600;
+            color: #5a4a4a;
+            background: #fcf6f6;
+            border-radius: 16px 16px 0 0;
+            font-size: 0.85rem;
+        }
+
+        .products-table td {
+            background: #fcf9f9;
+            padding: 1.2rem 1.2rem;
+            border-radius: 16px;
+            border: 1px solid #f5ecec;
+            transition: 0.2s;
+        }
+
+        .products-table tr:hover td {
+            background: #fffbfb;
+            border-color: #fad7d7;
+        }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .product-thumb {
+            width: 50px;
+            height: 50px;
+            background: #f0e8e8;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc2626;
+            font-size: 22px;
+            border: 1px solid #f0d7d7;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #1f1a2e;
+        }
+
+        .product-name small {
+            font-weight: 400;
+            color: #7a6a6a;
+            font-size: 0.8rem;
+            display: block;
+        }
+
+        .price-highlight {
+            font-weight: 700;
+            color: #1f1a2e;
+        }
+
+        .price-highlight .unit {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: #7a6a6a;
+        }
+
+        /* جمع‌بندی هزینه */
+        .order-summary-box {
+            margin-top: 2.5rem;
+            background: #fcf8f8;
+            border-radius: 28px;
+            padding: 1.8rem 2.2rem;
+            border: 1px solid #f5eaea;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem 3.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .summary-row .item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .summary-row .item .label {
+            font-size: 0.8rem;
+            color: #8a7a7a;
+            font-weight: 600;
+        }
+
+        .summary-row .item .value {
+            font-weight: 700;
+            color: #1e1a2b;
+            font-size: 1.05rem;
+        }
+
+        .total-amount {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #dc2626;
+            background: #fef1f1;
+            padding: 0.4rem 2rem;
+            border-radius: 60px;
+            border: 1px solid #fad7d7;
+        }
+
+        .total-amount small {
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: #8a6a6a;
+        }
+
+        /* دکمه‌های اقدام */
+        .action-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-red {
+            background: #dc2626;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 8px 18px #dc262655;
+            transition: 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-primary-red i {
+            color: white;
+        }
+
+        .btn-primary-red:hover {
+            background: #b91c1c;
+            box-shadow: 0 12px 28px #dc262677;
+            transform: scale(1.02);
+        }
+
+        .btn-outline-red {
+            background: transparent;
+            border: 1.5px solid #f0d7d7;
+            padding: 0.8rem 2.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #4a3a3a;
+            transition: 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-outline-red i {
+            color: #dc2626;
+        }
+
+        .btn-outline-red:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: white;
+        }
+
+        .btn-outline-red:hover i {
+            color: white;
+        }
+
+        .status-badge-large.status-pending {
+            background: #fef3c7 !important;
+            color: #d97706 !important;
+        }
+
+        .status-badge-large.status-paid {
+            background: #dcfce7 !important;
+            color: #16a34a !important;
+        }
+
+        .status-badge-large.status-processing {
+            background: #dbeafe !important;
+            color: #2563eb !important;
+        }
+
+        .status-badge-large.status-shipped {
+            background: #ede9fe !important;
+            color: #7c3aed !important;
+        }
+
+        .status-badge-large.status-delivered-red {
+            background: #dcfce7 !important;
+            color: #16a34a !important;
+        }
+
+        .status-badge-large.status-canceled {
+            background: #fee2e2 !important;
+            color: #dc2626 !important;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* ریسپانسیو */
+        @media screen and (max-width: 800px) {
+            .digito-card-red {
+                padding: 1.5rem;
+            }
+
+            .order-details-grid {
+                grid-template-columns: 1fr 1fr;
+                padding: 1.2rem;
+            }
+
+            .products-table th,
+            .products-table td {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .order-summary-box {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.2rem;
+            }
+
+            .total-amount {
+                align-self: flex-start;
+            }
+
+            .summary-row {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .order-details-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .order-title-section h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo-text {
+                font-size: 22px;
+            }
+
+            .back-btn {
+                padding: 0.4rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .products-table {
+                font-size: 0.8rem;
+            }
+
+            .product-thumb {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="digito-card-red">
+
+    <!-- هدر با دکمه بازگشت -->
+    <div class="digito-header no-print">
+        <div class="logo-area">
+            <div class="logo-icon-red"><i class="fas fa-bolt"></i></div>
+            <div class="logo-text">دیجیتو<span>.</span></div>
+        </div>
+
+        <a href="{% url 'dashboard:index' %}" class="back-btn">
+            <i class="fas fa-arrow-right"></i> بازگشت به لیست
+        </a>
+    </div>
+
+
+    <!-- عنوان سفارش و وضعیت -->
+    <div class="order-title-section">
+        <h1>
+            <i class="fas fa-receipt"></i>
+            سفارش #{{ order.id }}
+        </h1>
+
+        <span class="status-badge-large
+            {% if order.status == 'pending' %}status-pending
+            {% elif order.status == 'paid' %}status-paid
+            {% elif order.status == 'processing' %}status-processing
+            {% elif order.status == 'shipped' %}status-shipped
+            {% elif order.status == 'delivered' %}status-delivered-red
+            {% elif order.status == 'canceled' %}status-canceled
+            {% endif %}">
+
+            {% if order.status == 'pending' %}
+                <i class="fas fa-clock"></i>
+            {% elif order.status == 'paid' %}
+                <i class="fas fa-check-circle"></i>
+            {% elif order.status == 'processing' %}
+                <i class="fas fa-spinner"></i>
+            {% elif order.status == 'shipped' %}
+                <i class="fas fa-truck"></i>
+            {% elif order.status == 'delivered' %}
+                <i class="fas fa-check-circle"></i>
+            {% elif order.status == 'canceled' %}
+                <i class="fas fa-times-circle"></i>
+            {% endif %}
+            {{ order.get_status_display }}
+        </span>
+    </div>
+
+
+    <!-- گرید اطلاعات کلی سفارش -->
+    <div class="order-details-grid">
+
+        <div class="detail-item">
+            <span class="label">
+                <i class="fas fa-calendar-alt"
+                   style="color:#dc2626; margin-left:4px;"></i>
+                تاریخ ثبت
+            </span>
+
+            <span class="value">
+                <i class="fas fa-calendar-day"></i>
+                {{ order.created_at|date:"Y/m/d" }}
+                <span class="sub">
+                    ساعت {{ order.created_at|date:"H:i" }}
+                </span>
+            </span>
+        </div>
+
+
+        <div class="detail-item">
+            <span class="label">
+                <i class="fas fa-truck"
+                   style="color:#dc2626; margin-left:4px;"></i>
+                روش ارسال
+            </span>
+
+            <span class="value">
+                <i class="fas fa-shipping-fast"></i>
+                {{ order.get_shipping_method_display }}
+            </span>
+        </div>
+
+
+        <div class="detail-item">
+            <span class="label">
+                <i class="fas fa-credit-card"
+                   style="color:#dc2626; margin-left:4px;"></i>
+                وضعیت پرداخت
+            </span>
+
+            <span class="value">
+                <i class="fas fa-check-circle"></i>
+
+                {% if order.payment_status == "success" %}
+                    پرداخت شده
+                {% else %}
+                    {{ order.get_payment_status_display }}
+                {% endif %}
+            </span>
+        </div>
+        <div class="detail-item">
+            <span class="label">
+                <i class="fas fa-credit-card"
+                   style="color:#dc2626; margin-left:4px;"></i>
+                وضعیت سفارش
+            </span>
+
+            <span class="value">
+                <i class="fas fa-check-circle"></i>
+
+                {% if order.status == "pending" %}
+                    در انتظار پرداخت
+                {% else %}
+                    {{ order.get_status_display }}
+                {% endif %}
+            </span>
+        </div>
+
+
+        <div class="detail-item">
+            <span class="label">
+                <i class="fas fa-map-pin"
+                   style="color:#dc2626; margin-left:4px;"></i>
+                آدرس تحویل
+            </span>
+
+            <span class="value">
+                <i class="fas fa-home"></i>
+                {{ order.state }}، {{ order.city }}، {{ order.shipping_address }}
+
+                {% if order.postal_code %}
+                    <span class="sub">
+                        کد پستی: {{ order.postal_code }}
+                    </span>
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- لیست محصولات -->
+    <div class="products-header">
+
+        <h3>
+            <i class="fas fa-boxes"></i>
+            محصولات سفارش ({{ order.items.count }} مورد)
+        </h3>
+
+        {% if order.tracking_code %}
+            <span style="color:#7a6a6a; font-weight:500;">
+                <i class="fas fa-tag" style="color:#dc2626;"></i>
+                کد رهگیری: {{ order.tracking_code }}
+            </span>
+        {% endif %}
+
+    </div>
+
+
+    <table class="products-table">
+
+        <thead>
+        <tr>
+            <th>محصول</th>
+            <th>تعداد</th>
+            <th>قیمت واحد</th>
+            <th>جمع</th>
+        </tr>
+        </thead>
+
+
+        <tbody>
+
+        {% for item in order.items.all %}
+
+            <tr>
+
+                <td>
+                    <div class="product-cell">
+
+                        <div class="product-thumb">
+                            <i class="fas fa-box"></i>
+                        </div>
+
+                        <div class="product-name">
+                            {{ item.product_name }}
+
+                            <small>
+                                {% if item.product %}
+                                    {{ item.product.sku }}
+                                {% endif %}
+                            </small>
+                        </div>
+
+                    </div>
+                </td>
+
+
+                <td>
+                    {{ item.quantity }}
+                </td>
+
+
+                <td class="price-highlight">
+                    {{ item.price|floatformat:0 }}
+                    <span class="unit">تومان</span>
+                </td>
+
+
+                <td class="price-highlight">
+                    {{ item.total_price|floatformat:0 }}
+                    <span class="unit">تومان</span>
+                </td>
+
+            </tr>
+
+        {% empty %}
+
+            <tr>
+                <td colspan="4">
+                    محصولی برای این سفارش ثبت نشده است.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    <!-- جمع‌بندی هزینه‌ها -->
+    <div class="order-summary-box">
+
+        <div class="summary-details">
+
+            <div class="summary-row">
+
+                <div class="item">
+                    <span class="label">
+                        جمع محصولات
+                    </span>
+
+                    <span class="value">
+                        {{ order.total_price|floatformat:0 }}
+                        <span style="font-weight:400; color:#7a6a6a; font-size:0.9rem;">
+                            تومان
+                        </span>
+                    </span>
+                </div>
+
+
+                <div class="item">
+
+                    <span class="label">
+                        هزینه ارسال
+                    </span>
+
+                    <span class="value">
+
+                        {% if order.shipping_cost == 0 %}
+                            به عهده مشتری
+                        {% else %}
+                            {{ order.shipping_cost|floatformat:0 }}
+                            تومان
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="item">
+
+                    <span class="label">
+                        مالیات ارزش افزوده
+                    </span>
+
+                    <span class="value">
+                        {{ order.tax_amount|floatformat:0 }}
+                        تومان
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="total-amount">
+            {{ order.final_price|floatformat:0 }}
+            <small>تومان</small>
+        </div>
+
+    </div>
+
+
+    <!-- دکمه‌های اقدام -->
+    <div class="action-buttons no-print">
+
+        <button type="button" class="btn-primary-red" onclick="window.print()">
+            <i class="fas fa-print"></i>
+            چاپ فاکتور
+        </button>
+
+        <button class="btn-outline-red">
+            <i class="fas fa-headset"></i>
+            پشتیبانی
+        </button>
+
+
+    </div>
+
+</div>
+
+</body>
+</html>

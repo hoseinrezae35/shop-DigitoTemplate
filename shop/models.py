@@ -217,3 +217,94 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"تصویر {self.product.name if self.product_id else self.id}"
+
+
+class ProductComment(models.Model):
+    class Recommendation(models.TextChoices):
+        RECOMMENDED = "recommended", "پیشنهاد می‌شود"
+        NOT_RECOMMENDED = "not_recommended", "پیشنهاد نمی‌شود"
+
+    product = models.ForeignKey(
+        "Product",
+        on_delete=models.CASCADE,
+        related_name="comments",
+        verbose_name="محصول"
+    )
+
+    user = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.CASCADE,
+        related_name="product_comments",
+        verbose_name="کاربر"
+    )
+
+    title = models.CharField(
+        max_length=200,
+        default='درباره ی محصول',
+        verbose_name="عنوان دیدگاه"
+    )
+
+    text = models.TextField(
+        verbose_name="متن دیدگاه"
+    )
+
+    recommendation = models.CharField(
+        max_length=20,
+        choices=Recommendation.choices,
+        default=Recommendation.RECOMMENDED.value,
+        verbose_name="پیشنهاد"
+    )
+
+    is_active = models.BooleanField(
+        default=False,
+        verbose_name="وضعیت"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="تاریخ ثبت"
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="آخرین بروزرسانی"
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.user} - {self.product.name}"
+
+
+class ProductFavorite(models.Model):
+    user = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        related_name="favorite_products",
+        verbose_name="کاربر"
+    )
+
+    product = models.ForeignKey(
+        "shop.Product",
+        on_delete=models.CASCADE,
+        related_name="favorites",
+        verbose_name="محصول"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="تاریخ افزودن"
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "product"],
+                name="unique_user_product_favorite"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.user} - {self.product.name}"

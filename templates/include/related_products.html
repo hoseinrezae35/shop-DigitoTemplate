@@ -10,7 +10,7 @@
         <div class="h-[1px] w-full bg-gradient-to-r from-white via-zinc-300 to-white">
         </div>
         <div class="w-32 min-w-fit text-left">
-            <a href=""
+            <a href="{% url 'shop:related-products' pk=product.pk %}"
                class="group transition flex items-center justify-center gap-x-1 md:gap-x-2 text-zinc-600 hover:text-primary-500 text-xs md:text-sm text-center">
                 مشاهده همه
                 <svg class="fill-zinc-600 group-hover:-translate-x-1 transition group-hover:fill-primary-500 size-2.5 md:size-3"
@@ -27,13 +27,66 @@
             <div class="card-wrapper swiper-wrapper pb-10">
                 {% for product in r_products %}
                     <div class="card swiper-slide shiny my-2 p-2 md:p-4 hover:border-transparent hover:shadow-lg transition-shadow rounded-3xl border border-zinc-200">
-                        <a href="{% url 'shop:product-detail' pk=product.pk %}">
-                            <svg class="absolute right-2 top-2 bg-white hover:bg-primary-500 hover:fill-white transition-all rounded-full p-2 border border-zinc-300 size-9"
-                                 xmlns="http://www.w3.org/2000/svg" width="" height="" fill="#000000"
-                                 viewbox="0 0 256 256">
-                                <path d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"></path>
-                            </svg>
+                        <a
+                                href="#"
+                                class="favorite-button relative"
+                                data-url="{% url 'shop:product-favorite' pk=product.pk %}"
+                                data-favorite="{% if product.pk in favorite_product_ids %}true{% else %}false{% endif %}"
+                        >
+
+                            <div class="group cursor-pointer relative inline-block text-center">
+
+                                <svg
+                                        class="favorite-icon {% if product.pk in favorite_product_ids %}fill-red-500{% else %}fill-zinc-700{% endif %} hover:fill-red-400 transition"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="26"
+                                        height="26"
+                                        viewbox="0 0 256 256"
+                                >
+
+                                    {% if product.pk in favorite_product_ids %}
+
+                                        <!-- قلب پر -->
+                                        <path d="M128,216S28,160,28,88A52,52,0,0,1,128,64,52,52,0,0,1,228,88C228,160,128,216,128,216Z"></path>
+
+                                    {% else %}
+
+                                        <!-- قلب خالی -->
+                                        <path d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"></path>
+
+                                    {% endif %}
+
+                                </svg>
+
+                                <div
+                                        class="favorite-tooltip opacity-0 w-28 transition-all bg-zinc-800 text-white text-center text-xs rounded-lg py-2 absolute z-10 -left-11 group-hover:opacity-100 px-3 pointer-events-none"
+                                >
+
+                                    {% if product.pk in favorite_product_ids %}
+                                        حذف از علاقه مندی ها
+                                    {% else %}
+                                        افزودن به علاقه مندی ها
+                                    {% endif %}
+
+                                    <svg
+                                            class="absolute text-black h-2 w-full left-0 bottom-full rotate-180"
+                                            x="0px"
+                                            y="0px"
+                                            viewbox="0 0 255 255"
+                                            xml:space="preserve"
+                                    >
+                                        <polygon
+                                                class="fill-current"
+                                                points="0,0 127.5,127.5 255,0">
+                                        </polygon>
+                                    </svg>
+
+                                </div>
+
+                            </div>
+
                         </a>
+
                         <a href="{% url 'shop:product-detail' pk=product.pk %}" class="image-box mb-6 block py-10">
                             <img class="max-w-40 mx-auto" src="{{ product.primary_image }}" alt="">
                         </a>
@@ -72,7 +125,7 @@
                                     <span class="text-gray-400 line-through text-lg">
                                         {{ product.price }}
                                     </span>
-                                    <span class="text-xs text-gray-500">
+                                                <span class="text-xs text-gray-500">
                                         تومان
                                     </span>
                                             </div>
