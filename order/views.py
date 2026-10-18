@@ -4,11 +4,23 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import TemplateView
+from django.utils import timezone
+from datetime import timedelta
 
 from cart.cart import CartSession
 from dashboard.models import UserAddressModel
 from shop.models import Product
-from .models import Order, OrderItem, ShippingMethod
+from order.models import (
+    Order,
+    OrderItem,
+    OrderStatus,
+    PaymentStatus,
+    ShippingMethod,
+)
+from payment.models import Payment, PaymentGateway
+
+
+
 
 
 class OrderView(TemplateView):
@@ -47,14 +59,14 @@ class CreateOrderView(LoginRequiredMixin, View):
         if not address_id:
             messages.error(
                 request,
-                "لطفاً یک آدرس برای ارسال انتخاب کنید."
+                "لطفاً یک آدرس برای ارسال انتخاب کنید.",
             )
             return redirect("order:checkout")
 
         address = get_object_or_404(
             UserAddressModel,
             pk=address_id,
-            user=request.user
+            user=request.user,
         )
 
         shipping_method = request.POST.get("shipping_method")
@@ -62,9 +74,8 @@ class CreateOrderView(LoginRequiredMixin, View):
         if shipping_method not in ShippingMethod.values:
             messages.error(
                 request,
-                "روش ارسال انتخاب شده معتبر نیست."
+                "روش ارسال انتخاب شده معتبر نیست.",
             )
-
             return redirect("order:checkout")
 
         cart = CartSession(request.session)
@@ -74,9 +85,8 @@ class CreateOrderView(LoginRequiredMixin, View):
         if not cart_items:
             messages.error(
                 request,
-                "سبد خرید شما خالی است."
+                "سبد خرید شما خالی است.",
             )
-
             return redirect("cart:cart_list")
 
         total_price = sum(
@@ -100,92 +110,108 @@ class CreateOrderView(LoginRequiredMixin, View):
             shipping_cost = 0
 
         final_price = (
-                total_price
-                + tax_amount
-                + shipping_cost
+            total_price
+            + tax_amount
+            + shipping_cost
         )
 
-        with transaction.atomic():
+        try:
 
-            order = Order.objects.create(
+            with transaction.atomic():
 
-                user=request.user,
+                order = Order.objects.create(
+                    user=request.user,
 
-                address=address,
+                    address=address,
 
-                first_name=address.first_name,
-                last_name=address.last_name,
-                phone_number=address.phone_number,
-                state=address.state,
-                city=address.city,
-                postal_code=address.postal_code,
-                shipping_address=address.address,
+                    first_name=address.first_name,
+                    last_name=address.last_name,
+                    phone_number=address.phone_number,
+                    state=address.state,
+                    city=address.city,
+                    postal_code=address.postal_code,
+                    shipping_address=address.address,
 
-                shipping_method=shipping_method,
+                    shipping_method=shipping_method,
 
-                total_price=total_price,
-                tax_percent=tax_percent,
-                tax_amount=tax_amount,
-                shipping_cost=shipping_cost,
-                final_price=final_price,
+                    total_price=total_price,
+                    tax_percent=tax_percent,
+                    tax_amount=tax_amount,
+                    shipping_cost=shipping_cost,
+                    final_price=final_price,
+
+                    status=OrderStatus.PENDING,
+                    payment_status=PaymentStatus.PENDING,
+
+                    payment_expires_at=timezone.now()
+                    + timedelta(minutes=60),
+                )
+
+                for item in cart_items:
+
+                    product_id = item["product_obj"].id
+                    quantity = item["quantity"]
+
+                    product = (
+                        Product.objects
+                        .select_for_update()
+                        .get(pk=product_id)
+                    )
+
+                    if (
+                        not product.is_available
+                        or product.stock < quantity
+                    ):
+                        raise ValueError(
+                            f"موجودی محصول «{product.name}» کافی نیست."
+                        )
+
+                    unit_price = product.final_price
+
+                    OrderItem.objects.create(
+                        order=order,
+                        product=product,
+                        product_name=product.name,
+                        price=unit_price,
+                        quantity=quantity,
+                        total_price=unit_price * quantity,
+                    )
+
+                    product.stock -= quantity
+
+                    if product.stock == 0:
+                        product.is_available = False
+
+                    product.save(
+                        update_fields=[
+                            "stock",
+                            "is_available",
+                            "sales",
+                            "updated_at",
+                        ]
+                    )
+
+                # تومان → ریال
+                payment_amount = order.final_price * 10
+
+                payment = Payment.objects.create(
+                    order=order,
+                    gateway=PaymentGateway.ZARINPAL,
+                    amount=payment_amount,
+                    status=PaymentStatus.PENDING,
+                )
+
+
+        except ValueError as exc:
+
+            messages.error(
+                request,
+                str(exc),
             )
 
-            for item in cart_items:
+            return redirect("order:checkout")
 
-                product_id = item["product_obj"].id
-                quantity = item["quantity"]
-
-                product = Product.objects.select_for_update().get(
-                    pk=product_id
-                )
-
-
-                if product.stock < quantity:
-                    raise ValueError(
-                        f"موجودی محصول «{product.name}» کافی نیست."
-                    )
-
-
-                OrderItem.objects.create(
-
-                    order=order,
-
-                    product=product,
-
-                    product_name=product.name,
-
-                    price=product.final_price,
-
-                    quantity=quantity,
-
-                    total_price=(
-                            product.final_price * quantity
-                    )
-                )
-
-
-                product.stock -= quantity
-
-                if product.stock == 0:
-                    product.is_available = False
-
-                product.sales += quantity
-
-                product.save(
-                    update_fields=[
-                        "stock",
-                        "is_available",
-                        "sales",
-                        "updated_at",
-                    ]
-                )
-
-            cart.clear()
-
-
-        messages.success(
-            request,
-            "سفارش شما با موفقیت ثبت شد."
+        return redirect(
+            "payment:start",
+            payment_id=payment.id,
         )
-
-        return redirect("order:checkout")

@@ -2,30 +2,54 @@
 
 <li>
     {% if category.children_list %}
-        <button type="button" class="menu-toggle flex justify-between w-full py-3 px-4 hover:bg-gray-100 rounded-lg">
-            <div class="flex items-center gap-x-1">
-                {% if depth == 0 %}
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M15.25 2.75H8.75C7.09315 2.75 5.75 4.09315 5.75 5.75V18.25C5.75 19.9069 7.09315 21.25 8.75 21.25H15.25C16.9069 21.25 18.25 19.9069 18.25 18.25V5.75C18.25 4.09315 16.9069 2.75 15.25 2.75Z"
-                              stroke="#71717b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        <path d="M11 17.75H13" stroke="#71717b" stroke-width="1.5" stroke-linecap="round"
-                              stroke-linejoin="round"></path>
-                    </svg>
+        <div class="flex items-center gap-x-1 w-full">
+            <a href="{{ category.get_absolute_url }}"
+               class="flex-1 flex items-center gap-x-2 py-3 px-4 hover:bg-gray-100
+          rounded-lg text-sm text-zinc-800 transition
+          {% if depth == 0 %}font-medium{% endif %}">
+                {% if depth == 0 and category.image %}
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}"
+                         class="size-5 object-contain shrink-0">
+                {% elif depth == 0 %}
+                    <img src="{% static 'image/icons/default-category.svg' %}" alt=""
+                         class="size-5 shrink-0">
                 {% endif %}
-                <span>{{ category.name }}</span>
-            </div>
-            <img class="w-4 transition-transform opacity-80" src="{% static 'image/icons/arrowDown.svg' %}" alt="">
-        </button>
+                <span class="truncate">{{ category.name }}</span>
+            </a>
 
-        <ul class="submenu hidden pr-6 space-y-2">
+            <button type="button"
+                    class="menu-toggle shrink-0 size-8 flex items-center justify-center
+                           hover:bg-gray-100 rounded-lg transition"
+                    aria-label="باز کردن زیرشاخه‌های {{ category.name }}">
+                <svg class="menu-toggle-icon size-3 fill-zinc-500 transition-transform duration-300"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <ul class="submenu hidden pr-3 mr-3 border-r border-zinc-200 pt-1 space-y-0.5
+           overflow-hidden transition-[height] duration-300 ease-out">
             {% for child in category.children_list %}
                 {% include 'partials/menu_item.html' with category=child depth=depth|add:1 %}
             {% endfor %}
         </ul>
 
     {% else %}
-        <a href="#" class="block py-2 px-4 hover:bg-gray-100 rounded-md">
-            {{ category.name }}
+        <a href="{{ category.get_absolute_url }}"
+           class="flex items-center gap-x-2 py-3 px-4 hover:bg-gray-100
+              rounded-lg text-sm text-zinc-800 transition
+              {% if depth == 0 %}font-medium{% endif %}">
+            {% if depth == 0 %}
+                {% if category.image %}
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}"
+                         class="size-5 object-contain shrink-0">
+                {% else %}
+                    <img src="{% static 'image/icons/default-category.svg' %}" alt=""
+                         class="size-5 shrink-0">
+                {% endif %}
+            {% endif %}
+            <span class="truncate">{{ category.name }}</span>
         </a>
     {% endif %}
 </li>

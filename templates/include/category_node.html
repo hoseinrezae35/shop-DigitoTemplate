@@ -1,0 +1,39 @@
+{% load static %}
+{% spaceless %}
+<li class="w-full">
+    {% if node.children.exists %}
+        <button
+            type="button"
+            class="menu-toggle flex items-center justify-between w-full py-2 px-3 text-xs text-zinc-700 rounded-lg hover:bg-zinc-50 transition"
+            aria-expanded="false"
+        >
+            <span class="truncate text-right">{{ node.name }}</span>
+            <img
+                class="w-3 h-3 shrink-0 transition-transform duration-200 opacity-60 menu-arrow"
+                src="{% static 'image/icons/arrowDown.svg' %}"
+                alt=""
+            >
+        </button>
+
+        <ul class="submenu hidden mt-1 mr-3 pr-3 border-r border-zinc-100 space-y-1">
+            {% for child in node.children.all %}
+                {% if child.is_active %}
+                    {% include "include/category_node.html" with node=child %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <a
+            href="?{% if query_string %}{{ query_string }}&{% endif %}category={{ node.slug }}"
+            class="block w-full py-2 px-3 text-xs rounded-lg transition truncate
+            {% if request.GET.category == node.slug %}
+                text-primary-500 font-medium bg-primary-50
+            {% else %}
+                text-zinc-700 hover:text-primary-500 hover:bg-zinc-50
+            {% endif %}"
+        >
+            {{ node.name }}
+        </a>
+    {% endif %}
+</li>
+{% endspaceless %}

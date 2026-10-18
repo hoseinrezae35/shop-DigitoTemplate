@@ -3,18 +3,49 @@
 
 {% block content %}
     <div class="bg-white rounded-2xl min-h-80 h-auto shadow-custom p-4">
-        <div class="px-2 md:px-3 pt-3 pb-5 mb-3 text-zinc-700 text-sm md:text-base flex items-center gap-x-2 border-b border-zinc-200">
-            <svg class="fill-primary-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill=""
-                 viewbox="0 0 256 256">
-                <path d="M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z"></path>
-            </svg>
-            آدرس های من
-        </div>
-        <div class="flex justify-end items-center mb-4">
-            <a href="#" data-modal="addAddress"
-               class="open-modal text-xs md:text-sm bg-zinc-400 hover:opacity-90 hover:shadow-lg transition rounded-lg px-4 py-2.5 text-white">
-                اضافه کردن آدرس
-            </a>
+        <div class="space-y-5">
+
+            <!-- آدرس های من -->
+            <div class="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 md:p-5">
+                    <div class="flex items-center gap-x-3 text-zinc-800 font-medium text-sm md:text-base">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary-50 text-primary-500 shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                         viewbox="0 0 256 256">
+                        <path d="M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z"></path>
+                    </svg>
+                </span>
+                        آدرس های من
+                    </div>
+                    <a href="#" data-modal="addAddress"
+                       class="open-modal text-center text-xs md:text-sm font-medium bg-primary-500 hover:bg-primary-600 hover:shadow-md transition rounded-xl px-5 py-2.5 text-white w-full sm:w-auto">
+                        اضافه کردن آدرس
+                    </a>
+                </div>
+            </div>
+
+            <!-- سبد خرید -->
+            <div class="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 md:p-5">
+                    <div class="flex items-center gap-x-3 text-zinc-800 font-medium text-sm md:text-base">
+                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-primary-50 text-primary-500 shrink-0">
+                    <!-- آیکون سبد خرید -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                         viewbox="0 0 256 256">
+                        <path d="M230.14,58.87A8,8,0,0,0,224,56H62.68L56.6,22.57A8,8,0,0,0,48.73,16H24a8,8,0,0,0,0,16H42.55l22.5,123.79A16,16,0,0,0,80.79,168H208a8,8,0,0,0,0-16H80.79L78.4,140H208a16,16,0,0,0,15.69-12.86l12-64A8,8,0,0,0,230.14,58.87ZM208,124H75.14L64,72H216.35Z"></path>
+                        <circle cx="88" cy="204" r="16"></circle>
+                        <circle cx="192" cy="204" r="16"></circle>
+                    </svg>
+                </span>
+                        سبد خرید
+                    </div>
+                    <a href="{% url 'cart:cart_list' %}"
+                       class="open-modal text-center text-xs md:text-sm font-medium bg-zinc-800 hover:bg-zinc-900 hover:shadow-md transition rounded-xl px-5 py-2.5 text-white w-full sm:w-auto">
+                        رفتن به سبد خرید
+                    </a>
+                </div>
+            </div>
+
         </div>
         <!-- modal add address -->
         <div id="addAddress"
@@ -104,10 +135,6 @@
                         <div class="sm:w-1/2 flex flex-col gap-y-1">
                             <label class="text-zinc-700 flex">
                                 کد پستی
-                                <svg class="fill-red-500" xmlns="http://www.w3.org/2000/svg" width="10" height="10"
-                                     fill="#4d4d4d" viewbox="0 0 256 256">
-                                    <path d="M210.23,101.57l-72.6,29,51.11,65.71a6,6,0,0,1-9.48,7.36L128,137.77,76.74,203.68a6,6,0,1,1-9.48-7.36l51.11-65.71-72.6-29a6,6,0,1,1,4.46-11.14L122,119.14V40a6,6,0,0,1,12,0v79.14l71.77-28.71a6,6,0,1,1,4.46,11.14Z"></path>
-                                </svg>
                             </label>
                             <input class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-[#f0f0f0] px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300"
                                    type="text" placeholder="کد پستی محل تحویل" name="postal_code">
@@ -152,7 +179,11 @@
                                  viewbox="0 0 256 256">
                                 <path d="M228.44,89.34l-96-64a8,8,0,0,0-8.88,0l-96,64A8,8,0,0,0,24,96V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V96A8,8,0,0,0,228.44,89.34ZM96.72,152,40,192V111.53Zm16.37,8h29.82l56.63,40H56.46Zm46.19-8L216,111.53V192ZM128,41.61l81.91,54.61-67,47.78H113.11l-67-47.78Z"></path>
                             </svg>
-                            {{ address.postal_code }}
+                            {% if address.postal_code %}
+                                {{ address.postal_code }}
+                            {% else %}
+                                ?????????
+                            {% endif %}
                         </div>
                         <div class="flex gap-x-1 items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill=""

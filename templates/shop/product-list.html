@@ -6,40 +6,38 @@
     <div class="flex flex-col lg:flex-row px-4 md:px-8 md:mt-10 gap-5 pb-20">
         <!-- filters -->
         <div class="lg:w-3/12 space-y-5">
-            <div class="border border-zinc-100 h-fit rounded-2xl py-2 hover:shadow-sm transition-all">
-                <button class="menu-toggle flex justify-between w-full py-3 px-4 rounded-2xl cursor-pointer">
-                    <span class="text-zinc-700 text-sm">دسته بندی</span>
-                    <img class="w-4 transition-transform opacity-80" src="{% static 'image/icons/arrowDown.svg' %}"
-                         alt="">
+
+            <div class="border border-zinc-100 h-fit rounded-2xl py-2" data-menu-root>
+
+                <!-- دکمه‌ی باز/بسته کردن منو -->
+                <button
+                        type="button"
+                        class="menu-toggle flex items-center justify-between w-full py-3 px-4 cursor-pointer"
+                        aria-expanded="false"
+                >
+                    <span class="text-zinc-700 text-sm font-medium">دسته بندی</span>
+                    <img
+                            class="w-4 h-4 shrink-0 opacity-80 transition-transform duration-200 menu-arrow"
+                            src="{% static 'image/icons/arrowDown.svg' %}"
+                            alt=""
+                    >
                 </button>
-                <ul class="submenu hidden mt-2">
+
+                <!-- لیست دسته‌های اصلی -->
+                <ul class="submenu hidden mt-1 px-2 pb-2 space-y-1">
                     {% for cat in category %}
-                        <li>
-                            {% if cat.children.exists %}
-                                <button class="menu-toggle text-xs flex justify-between w-full py-2 px-4 text-zinc-700">
-                                    <span>{{ cat.name }}</span>
-                                    <img class="w-3 transition-transform opacity-60"
-                                         src="{% static 'image/icons/arrowDown.svg' %}" alt="">
-                                </button>
-                                <ul class="submenu hidden mr-4">
-                                    {% for child in cat.children.all %}
-                                        {% if child.is_active %}
-                                            <li>
-                                                <a href="?{% if query_string %}
-                                                    {{ query_string }}&{% endif %}category={{ child.slug }}"
-                                                   class="text-xs block py-2 px-4 transition {% if request.GET.category == child.slug %}text-primary-500 font-medium{% else %}text-zinc-500 hover:text-primary-500{% endif %}">
-                                                    {{ child.name }}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            {% else %}
-                                <a href="?{% if query_string %}{{ query_string }}&{% endif %}category={{ cat.slug }}"
-                                   class="text-xs flex w-full py-2 px-4 transition {% if request.GET.category == cat.slug %}text-primary-500 font-medium{% else %}text-zinc-700 hover:text-primary-500{% endif %}">
-                                    {{ cat.name }}
-                                </a>
-                            {% endif %}
+                        <li class="w-full">
+                            <a
+                                    href="{{ cat.get_absolute_url }}"
+                                    class="block w-full py-2 px-3 text-sm rounded-lg transition truncate
+                                    {% if active_category_pk == cat.pk %}
+                                        text-primary-500 font-medium bg-primary-50
+                                    {% else %}
+                                        text-zinc-700 hover:bg-zinc-50 hover:text-primary-500
+                                    {% endif %}"
+                                                >
+                                                    {{ cat.name }}
+                            </a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -400,6 +398,46 @@
             let product_id = $(this).data("product-id");
             addCartItem(product_id);
         });
+    </script>
+
+    <script>
+        (function () {
+            'use strict';
+
+            function bindMenu(root) {
+                if (root.dataset.menuBound === '1') return;
+                root.dataset.menuBound = '1';
+
+                root.addEventListener('click', function (e) {
+                    const toggle = e.target.closest('.menu-toggle');
+                    if (!toggle || !root.contains(toggle)) return;
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // submenu فرزند مستقیم همین root هست
+                    const submenu = root.querySelector(':scope > .submenu');
+                    if (!submenu) return;
+
+                    const arrow = toggle.querySelector('.menu-arrow');
+                    const isOpen = !submenu.classList.contains('hidden');
+
+                    submenu.classList.toggle('hidden', isOpen);
+                    toggle.setAttribute('aria-expanded', String(!isOpen));
+                    if (arrow) arrow.classList.toggle('rotate-180', !isOpen);
+                });
+            }
+
+            function initAllMenus() {
+                document.querySelectorAll('[data-menu-root]').forEach(bindMenu);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initAllMenus);
+            } else {
+                initAllMenus();
+            }
+        })();
     </script>
 
 {% endblock %}

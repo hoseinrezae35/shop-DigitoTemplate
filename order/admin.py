@@ -1,6 +1,16 @@
 from django.contrib import admin
 
 from .models import (Order, OrderItem)
+from payment.models import Payment
+
+
+class PaymentInline(admin.TabularInline):
+    model = Payment
+    extra = 0
+    fields = ("id", "gateway", "amount", "status", "authority", "ref_id", "created_at")
+    readonly_fields = fields
+    can_delete = False
+    show_change_link = True
 
 
 class OrderItemInline(admin.TabularInline):
@@ -114,6 +124,7 @@ class OrderAdmin(admin.ModelAdmin):
 
     inlines = [
         OrderItemInline,
+        PaymentInline,
     ]
 
     ordering = (
@@ -123,7 +134,6 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "order",

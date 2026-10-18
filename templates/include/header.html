@@ -17,7 +17,7 @@
                 <div class="p-5 flex flex-col gap-y-3 justify-center items-center">
                     <!-- logo -->
                     <a href="/">
-                        <img src="{% static '/image/logo.png' %}' %}" class="max-w-24 md:max-w-32 h-fit" alt="">
+                        <img src="{% static '/image/logo.png' %}" class="max-w-24 md:max-w-32 h-fit" alt="">
                     </a>
                     <!-- seacrh -->
                     <form action="{% url 'shop:product-list' %}" method="get" class="relative block">
@@ -74,15 +74,29 @@
                         </a>
                     </li>
                     <!-- category -->
-                    <div class="border-y border-zinc-300 py-2">
-                        <ul>
-                            {% for category in menu_categories %}
-                                {% include 'partials/menu_item.html' with category=category depth=0 %}
-                            {% endfor %}
-                        </ul>
-                    </div>
+                    <li class="list-none py-1">
+                        <button type="button" id="category-toggle" aria-expanded="false"
+                                class="w-full py-3 px-4 hover:bg-gray-100 rounded-lg flex items-center justify-between text-sm text-zinc-800 transition">
+                                <span class="flex items-center gap-x-2">
+                                    <img class="size-[18px]" src="{% static 'image/icons/category.svg' %}" alt="">
+                                    دسته بندی ها
+                                </span>
+                            <svg id="category-chevron"
+                                 class="size-3 fill-zinc-600 transition-transform duration-300"
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+                                <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                            </svg>
+                        </button>
+                        <div id="category-panel" class="hidden">
+                            <ul class="pt-1 pr-3 mr-4 border-r border-zinc-200">
+                                {% for category in menu_categories %}
+                                    {% include 'partials/menu_item.html' with category=category depth=0 %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
                     <li>
-                        <a href="#" class="py-3 px-4 hover:bg-gray-100 rounded-lg block">
+                        <a href="{% url 'blogs:blog-list' %}" class="py-3 px-4 hover:bg-gray-100 rounded-lg block">
                             وبلاگ
                         </a>
                     </li>
@@ -164,9 +178,9 @@
                 <a href="#" class="pt-3 flex gap-x-2 items-center group relative">
                     <img class="mb-2 size-4" src="{% static 'image/icons/category.svg' %}" alt="">
                     <li class="relative text-zinc-600 text-sm group-hover:text-primary-500 transition pb-2
-              after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]
-              after:bg-primary-500 after:scale-x-0 after:origin-right after:transition-transform after:duration-300
-              group-hover:after:scale-x-100">
+                         after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]
+                         after:bg-primary-500 after:scale-x-0 after:origin-right after:transition-transform after:duration-300
+                         group-hover:after:scale-x-100">
                         دسته بندی ها
                     </li>
                     <svg class="group-hover:rotate-180 transition-all duration-300 fill-zinc-600 mb-2 group-hover:fill-primary-500"
@@ -178,16 +192,24 @@
                 <div id="dropdown-menu"
                      class="absolute z-10 right-0 mt-2 md:w-2xl lg:w-4xl xl:w-7xl h-fit bg-white p-5 shadow-lg rounded-3xl flex opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
 
-                    <ul class="w-1/4 rounded-2xl bg-white drop-shadow-custom flex flex-col gap-y-3 p-3">
+                    <ul class="w-1/4 min-w-[180px] rounded-2xl bg-white drop-shadow-custom flex flex-col gap-y-2 p-3">
                         {% for cat in menu_categories %}
-                            <li class="category-item group/cat flex items-center gap-x-1 text-sm rounded-lg px-4 py-3 text-gray-600 hover:text-primary-500 cursor-pointer{% if forloop.first %} active-category{% endif %}"
+                            <li class="category-item group/cat flex items-center gap-x-2 text-sm rounded-lg
+                               px-3 py-2.5 text-gray-600 hover:text-primary-500 hover:bg-gray-50
+                               cursor-pointer transition
+                               {% if forloop.first %}active-category{% endif %}"
                                 data-category="cat-{{ cat.id }}">
-                                {% if cat.image %}
-                                    <img src="{{ cat.image.url }}" alt="{{ cat.name }}" class="w-5 h-5 object-contain">
-                                {% else %}
-                                    <img src="{% static 'image/icons/default-category.svg' %}" alt="" class="w-5 h-5">
-                                {% endif %}
-                                {{ cat.name }}
+                                <a href="{{ cat.get_absolute_url }}"
+                                   class="flex items-center gap-x-2 w-full">
+                                    {% if cat.image %}
+                                        <img src="{{ cat.image.url }}" alt="{{ cat.name }}"
+                                             class="w-5 h-5 object-contain shrink-0">
+                                    {% else %}
+                                        <img src="{% static 'image/icons/default-category.svg' %}" alt=""
+                                             class="w-5 h-5 shrink-0">
+                                    {% endif %}
+                                    <span class="truncate">{{ cat.name }}</span>
+                                </a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -199,7 +221,7 @@
                                  style="{% if not forloop.first %}display:none;{% endif %}">
                                 {% for child in cat.children_list %}
                                     <div>
-                                        <a href="#" class="flex gap-x-2 items-center mb-5">
+                                        <a href="{{ child.get_absolute_url }}" class="flex gap-x-2 items-center mb-5">
                                             <div class="w-fit min-w-fit text-primary-500 text-sm hover:text-primary-700 transition">
                                                 {{ child.name }}
                                             </div>
@@ -208,7 +230,7 @@
                                         <ul class="pr-4 flex flex-col gap-y-3 text-xs mb-3">
                                             {% for grandchild in child.children_list %}
                                                 <li>
-                                                    <a href="#"
+                                                    <a href="{{ grandchild.get_absolute_url }}"
                                                        class="text-zinc-500 hover:text-zinc-700 transition">
                                                         {{ grandchild.name }}
                                                     </a>
@@ -242,7 +264,7 @@
                     پرفروش ترین‌ها
                 </li>
             </a>
-            <a href="#" class="pt-1 flex gap-x-2 items-center group relative">
+            <a href="{% url 'blogs:blog-list' %}" class="pt-1 flex gap-x-2 items-center group relative">
                 <li class="relative text-zinc-600 text-sm group-hover:text-primary-500 transition pb-2
             after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]
             after:bg-primary-500 after:scale-x-0 after:origin-right after:transition-transform after:duration-300
@@ -272,7 +294,7 @@
             <!-- cart -->
             <a href="{% url 'cart:cart_list' %}"
                class="relative group border-2 border-primary-500 hover:shadow-lg hover:bg-zinc-200 transition rounded-xl p-2.5">
-                <img src="{% static "image/icons/cart.svg" %}" alt="سبد خرید" class="w-6 h-6">
+                <img src="{% static 'image/icons/cart.svg' %}" alt="سبد خرید" class="w-6 h-6">
                 <span id="total-cart-item-count"
                       class="absolute -right-2 -top-2 flex size-6 drop-shadow-lg items-center justify-center rounded-full bg-white text-sm font-semibold text-primary-500">
                     {{ cart_count }}
@@ -287,13 +309,25 @@
                         <img src="{% static 'image/icons/user.svg' %}" class="size-5" alt="">
                     </a>
                     <a href="{% url 'accounts:logout' %}"
-                       class="flex items-center gap-2 bg-red-500 hover:bg-red-600 transition rounded-xl px-4 py-2 text-white">
-                        <span class="hidden lg:block">خروج</span>
+                       class="flex items-center justify-center gap-2
+                      bg-red-500 hover:bg-red-600 transition rounded-xl
+                      p-2 md:p-2.5 text-white shrink-0"
+                       title="خروج"
+                       aria-label="خروج">
+                        <span class="hidden lg:block text-sm">خروج</span>
+                        <svg class="lg:hidden size-5 md:size-6"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
                     </a>
                 </div>
             {% else %}
                 <!-- نمایش برای کاربر لاگین نشده -->
-                <a href="#" data-modal="modal1" onclick="openModal()"
+                <a href="#" data-modal="modal1" onclick="openModal(window.location.pathname + window.location.search)"
                    class="open-modal absolute md:static top-3.5 left-3 md:flex bg-gradient-to-bl from-primary-500 to-primary-400 hover:opacity-90 hover:shadow-lg transition rounded-xl p-2.5 items-center gap-x-2 text-sm text-white">
                     <p class="hidden lg:block">ورود | ثبت نام</p>
                     <img src="{% static 'image/icons/user.svg' %}" alt="">
@@ -303,9 +337,11 @@
     </div>
     <!-- modal login -->
     <div id="modal1" class="modal fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
-        <div class="modal-box bg-white p-6 rounded-3xl shadow-lg w-10/12 md:w-6/12 lg:w-5/12 xl:w-3/12">
-            <form method="post" action="{% url 'accounts:login' %}" class="pt-5">
+        <div class="modal-box bg-white p-6 rounded-3xl shadow-lg w-10/12 md:w-6/12 lg:w-5/12 xl:w-3/12 opacity-0 scale-90 transition-all duration-300">
+            <form method="post" action="{% url 'accounts:login' %}" class="pt-5" id="loginForm">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="">
+
                 <p class="text-lg text-zinc-800 mb-8 text-center">ورود به حساب کاربری</p>
 
                 <div class="mb-4">
@@ -335,7 +371,9 @@
 
                 <div class="text-center mt-4 text-sm text-zinc-500">
                     حساب کاربری ندارید؟
-                    <a href="#" onclick="showRegister()" class="text-primary-500 hover:underline">ثبت نام کنید</a>
+                    <a href="#"
+                       onclick="showRegister(document.querySelector('#loginForm input[name=\'next\']')?.value || window.location.pathname)"
+                       class="text-primary-500 hover:underline">ثبت نام کنید</a>
                 </div>
             </form>
         </div>
@@ -344,8 +382,10 @@
     <!-- مودال ثبت نام -->
     <div id="modal2" class="modal fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
         <div class="modal-box bg-white p-6 rounded-3xl shadow-lg w-10/12 md:w-6/12 lg:w-5/12 xl:w-3/12">
-            <form method="post" action="{% url 'accounts:register' %}" class="pt-5">
+            <form method="post" action="{% url 'accounts:register' %}" class="pt-5" id="registerForm">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="">
+
                 <p class="text-lg text-zinc-800 mb-8 text-center">ثبت نام کاربر جدید</p>
 
                 <div class="mb-4">

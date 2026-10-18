@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load best_selling_product_tags %}
+{% load show_articles %}
 
 {% block content %}
     <div class="px-2 md:px-12">
@@ -8,27 +9,27 @@
             <div class="swiper-wrapper">
                 <a href="" class="swiper-slide">
                     <img class="w-full h-60 md:h-96 object-cover object-bottom"
-                         src="{% static 'image\heroSlider\1.webp' %}"
+                         src="{% static 'image/heroSlider/1.webp' %}"
                          alt="">
                 </a>
                 <a href="" class="swiper-slide">
                     <img class="w-full h-60 md:h-96 object-cover object-bottom"
-                         src="{% static 'image\heroSlider\2.webp' %}"
+                         src="{% static 'image/heroSlider/2.webp' %}"
                          alt="">
                 </a>
                 <a href="" class="swiper-slide">
                     <img class="w-full h-60 md:h-96 object-cover object-bottom"
-                         src="{% static 'image\heroSlider\3.webp' %}"
+                         src="{% static 'image/heroSlider/3.webp' %}"
                          alt="">
                 </a>
                 <a href="" class="swiper-slide">
                     <img class="w-full h-60 md:h-96 object-cover object-bottom"
-                         src="{% static 'image\heroSlider\4.webp' %}"
+                         src="{% static 'image/heroSlider/4.webp' %}"
                          alt="">
                 </a>
                 <a href="" class="swiper-slide">
                     <img class="w-full h-60 md:h-96 object-cover object-bottom"
-                         src="{% static 'image\heroSlider\5.webp' %}"
+                         src="{% static 'image/heroSlider/5.webp' %}"
                          alt="">
                 </a>
             </div>
@@ -114,191 +115,13 @@
                     محصولات جدید
                 </p>
             </div>
-            <img class="w-4/12 md:w-11/12" src="{% static 'image\Electronics.webp' %}" alt="">
+            <img class="w-4/12 md:w-11/12" src="{% static 'image/Electronics.webp' %}" alt="">
         </div>
         <!-- main slider -->
         {% show_new_products %}
     </div>
 
-    <div class="mt-12 md:mt-20 px-4 md:px-14">
-        <!-- top blog -->
-        <div class="flex gap-x-4 justify-between items-center mb-7">
-            <div class="w-48 min-w-fit text-zinc-700 md:font-yekanBakhBold">
-                خواندنی ها
-            </div>
-            <div class="h-[1px] w-full bg-gradient-to-r from-white via-zinc-300 to-white">
-            </div>
-            <div class="w-32 min-w-fit text-left">
-                <a href=""
-                   class="group transition flex items-center justify-center gap-x-1 md:gap-x-2 text-zinc-600 hover:text-primary-500 text-xs md:text-sm text-center">
-                    مشاهده همه
-                    <svg class="fill-zinc-600 group-hover:-translate-x-1 transition group-hover:fill-primary-500 size-2.5 md:size-3"
-                         xmlns="http://www.w3.org/2000/svg" width="" height="" fill="" viewbox="0 0 256 256">
-                        <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
-        <!-- main blog -->
-        <div class="containerPSlider swiper">
-            <div class="blog">
-                <div class="card-wrapper swiper-wrapper pb-10">
-                    <div class="card swiper-slide bg-white rounded-3xl border hover:border-zinc-300 transition border-zinc-300 group p-2 md:p-3 hover:drop-shadow-lg">
-                        <a href="" class="image-box block overflow-hidden rounded-lg md:rounded-2xl">
-                            <img class="rounded-2xl w-full transition-transform duration-300 ease-in-out group-hover:rotate-3 group-hover:scale-110 lazyload"
-                                 src="{% static 'image\blog\2.png' %}" alt="blog">
-                        </a>
-                        <div class="p-2 mt-2">
-                            <a href="./blog(single).html"
-                               class="text-xs md:text-sm font-normal md:font-semibold h-8 lg:h-10 line-clamp-2 text-zinc-700">
-                                ۷ ترفند برای افزایش طیش طول عمر هدفون ۷ ترفند برای افزایش طیش طول عمر هدفون ۷ ترفند برای
-                                افزایش طیش طول عمر هدفون
-                            </a>
-                            <div class="flex justify-between mt-8">
-                                <div class="text-xs flex gap-x-1 items-center text-zinc-400">
-                                    <svg class="fill-zinc-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                         fill="" viewbox="0 0 256 256">
-                                        <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"></path>
-                                    </svg>
-                                    1403/08/04
-                                </div>
-                                <a href=""
-                                   class="flex justify-center items-center gap-x-1 group w-fit text-xs md:text-sm transition text-zinc-600 group-hover:text-zinc-700">
-                                    ادامه مطلب
-                                    <svg class="fill-zinc-600 transition group-hover:fill-zinc-700 size-2 md:size-4"
-                                         xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill=""
-                                         viewbox="0 0 256 256">
-                                        <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card swiper-slide bg-white rounded-3xl border hover:border-zinc-300 transition border-zinc-300 group p-2 md:p-3 hover:drop-shadow-lg">
-                        <a href="" class="image-box block overflow-hidden rounded-lg md:rounded-2xl">
-                            <img class="rounded-2xl w-full transition-transform duration-300 ease-in-out group-hover:rotate-3 group-hover:scale-110 lazyload"
-                                 src="{% static 'image\blog\3.png' %}" alt="blog">
-                        </a>
-                        <div class="p-2 mt-2">
-                            <a href="./blog(single).html"
-                               class="text-xs md:text-sm font-normal md:font-semibold h-8 lg:h-10 line-clamp-2 text-zinc-700">
-                                ۷ ترفند برای افزایش طیش طول عمر هدفون
-                            </a>
-                            <div class="flex justify-between mt-8">
-                                <div class="text-xs flex gap-x-1 items-center text-zinc-400">
-                                    <svg class="fill-zinc-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                         fill="" viewbox="0 0 256 256">
-                                        <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"></path>
-                                    </svg>
-                                    1403/08/04
-                                </div>
-                                <a href=""
-                                   class="flex justify-center items-center gap-x-1 group w-fit text-xs md:text-sm transition text-zinc-600 group-hover:text-zinc-700">
-                                    ادامه مطلب
-                                    <svg class="fill-zinc-600 transition group-hover:fill-zinc-700 size-2 md:size-4"
-                                         xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill=""
-                                         viewbox="0 0 256 256">
-                                        <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card swiper-slide bg-white rounded-3xl border hover:border-zinc-300 transition border-zinc-300 group p-2 md:p-3 hover:drop-shadow-lg">
-                        <a href="" class="image-box block overflow-hidden rounded-lg md:rounded-2xl">
-                            <img class="rounded-2xl w-full transition-transform duration-300 ease-in-out group-hover:rotate-3 group-hover:scale-110 lazyload"
-                                 src="{% static 'image\blog\4.png' %}" alt="blog">
-                        </a>
-                        <div class="p-2 mt-2">
-                            <a href="./blog(single).html"
-                               class="text-xs md:text-sm font-normal md:font-semibold h-8 lg:h-10 line-clamp-2 text-zinc-700">
-                                ۷ ترفند برای افزایش طیش طول عمر هدفون
-                            </a>
-                            <div class="flex justify-between mt-8">
-                                <div class="text-xs flex gap-x-1 items-center text-zinc-400">
-                                    <svg class="fill-zinc-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                         fill="" viewbox="0 0 256 256">
-                                        <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"></path>
-                                    </svg>
-                                    1403/08/04
-                                </div>
-                                <a href=""
-                                   class="flex justify-center items-center gap-x-1 group w-fit text-xs md:text-sm transition text-zinc-600 group-hover:text-zinc-700">
-                                    ادامه مطلب
-                                    <svg class="fill-zinc-600 transition group-hover:fill-zinc-700 size-2 md:size-4"
-                                         xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill=""
-                                         viewbox="0 0 256 256">
-                                        <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card swiper-slide bg-white rounded-3xl border hover:border-zinc-300 transition border-zinc-300 group p-2 md:p-3 hover:drop-shadow-lg">
-                        <a href="" class="image-box block overflow-hidden rounded-lg md:rounded-2xl">
-                            <img class="rounded-2xl w-full transition-transform duration-300 ease-in-out group-hover:rotate-3 group-hover:scale-110 lazyload"
-                                 src="{% static 'image\blog\2.png' %}" alt="blog">
-                        </a>
-                        <div class="p-2 mt-2">
-                            <a href="./blog(single).html"
-                               class="text-xs md:text-sm font-normal md:font-semibold h-8 lg:h-10 line-clamp-2 text-zinc-700">
-                                ۷ ترفند برای افزایش طیش طول عمر هدفون ۷ ترفند برای افزایش طیش طول عمر هدفون ۷ ترفند برای
-                                افزایش طیش طول عمر هدفون
-                            </a>
-                            <div class="flex justify-between mt-8">
-                                <div class="text-xs flex gap-x-1 items-center text-zinc-400">
-                                    <svg class="fill-zinc-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                         fill="" viewbox="0 0 256 256">
-                                        <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"></path>
-                                    </svg>
-                                    1403/08/04
-                                </div>
-                                <a href=""
-                                   class="flex justify-center items-center gap-x-1 group w-fit text-xs md:text-sm transition text-zinc-600 group-hover:text-zinc-700">
-                                    ادامه مطلب
-                                    <svg class="fill-zinc-600 transition group-hover:fill-zinc-700 size-2 md:size-4"
-                                         xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill=""
-                                         viewbox="0 0 256 256">
-                                        <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card swiper-slide bg-white rounded-3xl border hover:border-zinc-300 transition border-zinc-300 group p-2 md:p-3 hover:drop-shadow-lg">
-                        <a href="" class="image-box block overflow-hidden rounded-lg md:rounded-2xl">
-                            <img class="rounded-2xl w-full transition-transform duration-300 ease-in-out group-hover:rotate-3 group-hover:scale-110 lazyload"
-                                 src="{% static 'image\blog\3.png' %}" alt="blog">
-                        </a>
-                        <div class="p-2 mt-2">
-                            <a href="./blog(single).html"
-                               class="text-xs md:text-sm font-normal md:font-semibold h-8 lg:h-10 line-clamp-2 text-zinc-700">
-                                ۷ ترفند برای افزایش طیش طول عمر هدفون
-                            </a>
-                            <div class="flex justify-between mt-8">
-                                <div class="text-xs flex gap-x-1 items-center text-zinc-400">
-                                    <svg class="fill-zinc-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                         fill="" viewbox="0 0 256 256">
-                                        <path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"></path>
-                                    </svg>
-                                    1403/08/04
-                                </div>
-                                <a href=""
-                                   class="flex justify-center items-center gap-x-1 group w-fit text-xs md:text-sm transition text-zinc-600 group-hover:text-zinc-700">
-                                    ادامه مطلب
-                                    <svg class="fill-zinc-600 transition group-hover:fill-zinc-700 size-2 md:size-4"
-                                         xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill=""
-                                         viewbox="0 0 256 256">
-                                        <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% show_articles_home %}
 {% endblock %}
 
 {% block extra_js %}

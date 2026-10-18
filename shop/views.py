@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
@@ -108,6 +108,9 @@ class ProductDetailView(DetailView):
         context["comments"] = self.object.comments.filter(
             is_active=True
         )
+        context["comments_count"] = self.object.comments.filter(
+            is_active=True
+        ).count()
 
         context["is_favorite"] = False
 
@@ -191,6 +194,8 @@ class CategoryDetailView(ListView):
         context["query_string"] = query_params.urlencode()
         context["total_items"] = self.object_list.count()
         context['favorite_product_ids'] = favorite_product_ids
+        context['category'] = Category.objects.filter(parent=None, is_active=True)
+        context['active_category_pk'] = self.kwargs.get('pk') or self.request.GET.get('category')
 
         return context
 
@@ -284,12 +289,6 @@ class ToggleProductFavoriteView(LoginRequiredMixin, View):
             "action": "added",
             "message": "محصول با موفقیت به علاقه‌مندی‌ها اضافه شد.",
         })
-
-
-from django.views.generic import ListView
-from django.db.models import Q
-
-from .models import Product, ProductFavorite, Category
 
 
 class RelatedProductsListView(ListView):

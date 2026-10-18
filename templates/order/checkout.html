@@ -277,9 +277,8 @@
                 {% endif %}
 
             {% else %}
-
                 <div class="flex flex-col sm:flex-row items-center justify-center
-                        gap-3 border border-zinc-200 rounded-xl p-6 text-center">
+                     gap-3 border border-zinc-200 rounded-xl p-6 text-center">
 
                 <span class="text-zinc-600 text-sm">
                     لطفاً وارد حساب کاربری خود شوید و اگر حساب ندارید ایجاد کنید.
@@ -287,8 +286,8 @@
 
                     <button
                             type="button"
-                            onclick="openModal()"
-                            class="open-modal bg-zinc-400 hover:opacity-90
+                            onclick="openModal(window.location.pathname + window.location.search)"
+                            class="bg-zinc-400 hover:opacity-90
                            hover:shadow-lg transition rounded-lg
                            px-4 py-2.5 text-sm text-white"
                     >
@@ -296,7 +295,6 @@
                     </button>
 
                 </div>
-
             {% endif %}
 
         </div>

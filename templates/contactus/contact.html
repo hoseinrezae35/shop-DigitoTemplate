@@ -4,34 +4,42 @@
 {% block content %}
     <!-- contact us -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-8 mx-4 md:mx-32 mb-8 md:my-12 border border-zinc-200 rounded-2xl p-4 md:p-8">
-        <div class="space-y-4 md:space-y-6">
-            <div>
-                <p class="text-xs text-zinc-600 pb-3 pr-2">
-                    نام و نام خانوادگی:
-                </p>
-                <input class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-[#f0f0f0] px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300"
-                       type="text" placeholder="نام و نام خانوادگی شما...">
+        <form method="post" action="{% url 'contactus:contact' %}">
+            {% csrf_token %}
+            <div class="space-y-4 md:space-y-6">
+                <div>
+                    <p class="text-xs text-zinc-600 pb-3 pr-2">
+                        نام و نام خانوادگی:
+                    </p>
+                    <input name="name"
+                           class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-[#f0f0f0] px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300"
+                           type="text" placeholder="نام و نام خانوادگی شما...">
+                </div>
+                <div>
+                    <p class="text-xs text-zinc-600 pb-3 pr-2">
+                        شماره تلفن:
+                    </p>
+                    <input name="phone"
+                           class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-[#f0f0f0] px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300"
+                           type="text" placeholder="شماره تلفن شما...">
+                </div>
+                <div>
+                    <p class="text-xs text-zinc-600 pb-3 pr-2">
+                        پیام شما:
+                    </p>
+                    <textarea name="message"
+                              class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-[#f0f0f0] px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300 resize-none"
+                              placeholder="متن پیام شما..." cols="30" rows="5">
+                </textarea>
+                </div>
+                <button type="submit"
+                        class="bg-gradient-to-bl from-primary-500 to-primary-400 hover:opacity-90 hover:shadow-lg transition rounded-xl py-2.5 md:py-3 px-10 md:px-14 text-sm text-white">
+                    ارسال پیام
+                </button>
             </div>
-            <div>
-                <p class="text-xs text-zinc-600 pb-3 pr-2">
-                    شماره تلفن:
-                </p>
-                <input class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-[#f0f0f0] px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300"
-                       type="text" placeholder="شماره تلفن شما...">
-            </div>
-            <div>
-                <p class="text-xs text-zinc-600 pb-3 pr-2">
-                    پیام شما:
-                </p>
-                <textarea
-                        class="rounded-2xl rounded-tr-sm text-sm text-zinc-600 w-full bg-[#f0f0f0] px-5 py-3.5 placeholder:text-zinc-400 placeholder:text-xs focus:outline-1 focus:outline-zinc-300 resize-none"
-                        placeholder="متن پیام شما..." cols="30" rows="5"></textarea>
-            </div>
-            <a href="#"
-               class="bg-gradient-to-bl from-primary-500 to-primary-400 hover:opacity-90 hover:shadow-lg transition rounded-xl py-2.5 md:py-3 px-10 md:px-14 text-sm text-white">
-                ارسال
-            </a>
-        </div>
+        </form>
+
+
         <div>
             <div class="text-zinc-600 text-sm md:text-base text-center border-b-2 border-b-primary-500 pb-1 w-fit mx-auto">
                 اطلاعات تماس

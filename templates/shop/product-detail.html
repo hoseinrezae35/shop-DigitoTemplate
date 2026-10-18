@@ -127,19 +127,19 @@
                 <div class="text-zinc-400 text-xs md:text-sm mt-4">
                     {{ product.short_description }}
                 </div>
-                <a href="" class="flex items-start gap-x-1 text-sm text-primary-500 mt-3">
+                <a href="#comments" class="flex items-start gap-x-1 text-sm text-primary-500 mt-3">
                     <svg class="fill-primary-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill=""
-                         viewbox="0 0 256 256">
+                         viewBox="0 0 256 256">
                         <path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"></path>
                     </svg>
                     <span>
-              <span>
-                2
-              </span>
-              <span>
-                دیدگاه
-              </span>
-            </span>
+                        <span>
+                             {{ comments_count }}
+                        </span>
+                        <span>
+                            دیدگاه
+                        </span>
+                    </span>
                 </a>
                 <div class="mt-8 text-zinc-700">
                     ویژگی های محصول:
@@ -159,40 +159,7 @@
             </div>
             <!-- buy -->
             <div class="lg:w-3/12">
-                <div class="lg:mt-8 mb-8">
-                    <div class="text-zinc-700">
-                        رنگ:
-                    </div>
-                    <ul class="flex flex-wrap gap-2">
-                        {% for color in product.colors.all %}
-                            <li>
-                                <input
-                                        type="radio"
-                                        id="color-{{ color.id }}"
-                                        name="color"
-                                        value="{{ color.id }}"
-                                        class="hidden peer"
-                                >
 
-                                <label
-                                        for="color-{{ color.id }}"
-                                        class="inline-flex items-center justify-center px-2 py-3 text-gray-600 bg-white border-2 border-gray-200 rounded-full cursor-pointer peer-checked:border-primary-300 hover:text-gray-600 hover:bg-gray-100"
-                                >
-                                    <div class="flex items-center gap-x-2">
-                                        <div
-                                                class="w-5 h-5 rounded-full border border-gray-300"
-                                                style="background-color: {{ color.code }};"
-                                        ></div>
-
-                                        <div class="text-sm">
-                                            {{ color.name }}
-                                        </div>
-                                    </div>
-                                </label>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
                 <div class="p-3 border border-zinc-300 rounded-xl mx-auto divide-y divide-zinc-200">
                     <div class="flex gap-x-1 items-center text-zinc-600 text-sm pb-5 pt-3">
                         <svg class="fill-zinc-700" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill=""

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from decouple import config, Csv
+from mypy.plugins import default
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,6 +30,10 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'order.apps.OrderConfig',
     'payment.apps.PaymentConfig',
+    'blogs.apps.BlogsConfig',
+    'abouts.apps.AboutsConfig',
+    'contactus.apps.ContactusConfig',
+    'adminpanel.apps.AdminpanelConfig',
 
 ]
 
@@ -124,13 +129,19 @@ LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# zarinpal
+ZARINPAL_MERCHANT_ID = config("ZARINPAL_MERCHANT_ID", default="d8abf83c-d62a-4bde-889d-628b3812a99d")
+
+ZARINPAL_REQUEST_URL = config("ZARINPAL_REQUEST_URL", default="https://sandbox.zarinpal.com/pg/v4/payment/request.json")
+
+ZARINPAL_VERIFY_URL = config("ZARINPAL_VERIFY_URL", default="https://sandbox.zarinpal.com/pg/v4/payment/verify.json")
+
+ZARINPAL_STARTPAY_URL = config("ZARINPAL_STARTPAY_URL", default="https://sandbox.zarinpal.com/pg/StartPay/")
+
 # CSRF_TRUSTED_ORIGINS = config(
 #     'CSRF_TRUSTED_ORIGINS',
 #     default='https://shop-project.liara.run,https://fiuragallery.ir',
 #     cast=lambda v: [item.strip() for item in v.split(',')])
 
-
-# MERCHANT_ID = config('MERCHANT_ID', default='xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')
-# SANDBOX_MODE = config('SANDBOX_MODE', default=False, cast=bool)
-#
 # BASE_URL = config('BASE_URL', default='https://fiuragallery.ir')

@@ -6,7 +6,7 @@ register = template.Library()
 
 @register.inclusion_tag("include/best_sellers_product.html", takes_context=True)
 def show_best_selling_products(context):
-    best_sellers = list(Product.objects.filter(is_bestseller=True).order_by("-created_at")[:6])
+    best_sellers = list(Product.objects.filter(is_available=True, is_bestseller=True).order_by("-created_at")[:6])
     favorite_product_ids = set()
     request = context["request"]
     if request.user.is_authenticated:
@@ -24,7 +24,7 @@ def show_best_selling_products(context):
 def show_new_products(context):
     new_product = list(
         Product.objects
-        .filter(is_new=True)
+        .filter(is_available=True, is_new=True)
         .order_by("-created_at")[:6]
     )
 

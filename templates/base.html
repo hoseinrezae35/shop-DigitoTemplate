@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
 
+
     {% block extra_css %}  {% endblock %}
 
     <title>{% block title %} فروشگاه {% endblock %}</title>
@@ -61,13 +62,36 @@
 <script src="{% static 'js/nouislider.min.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <script>
     const modal1 = document.getElementById('modal1');
     const modal2 = document.getElementById('modal2');
     const modalBox1 = document.querySelector('#modal1 .modal-box');
     const modalBox2 = document.querySelector('#modal2 .modal-box');
 
-    function openModal() {
+
+    function showToast(text, tags = 'error') {
+        let bg = '#dc3545';
+        if (tags === 'success') bg = '#28a745';
+        else if (tags === 'warning') bg = '#ffc107';
+        else if (tags === 'info') bg = '#007bff';
+
+        Toastify({
+            text: text,
+            className: `toastify-${tags}`,
+            style: {background: bg},
+            duration: 3000,
+            close: true,
+            gravity: 'top',
+            position: 'right',
+        }).showToast();
+    }
+
+    function openModal(nextUrl) {
+        if (nextUrl) {
+            const nextInput = document.querySelector('#loginForm input[name="next"]');
+            if (nextInput) nextInput.value = nextUrl;
+        }
         modal1.classList.remove('hidden');
         modal1.classList.add('flex');
         setTimeout(() => {
@@ -76,7 +100,11 @@
         }, 10);
     }
 
-    function showRegister() {
+    function showRegister(nextUrl) {
+        if (nextUrl) {
+            const nextInput = document.querySelector('#registerForm input[name="next"]');
+            if (nextInput) nextInput.value = nextUrl;
+        }
         modal2.classList.remove('hidden');
         modal2.classList.add('flex');
         setTimeout(() => {
@@ -124,41 +152,107 @@
         if (e.target === modal2) closeModal2();
     });
 
+    // ============ AJAX Submit فرم لاگین ============
+    document.getElementById('loginForm')?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const formData = new FormData(form);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'در حال ورود...';
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('خوش آمدید', 'success');
+                setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                }, 800);
+            } else {
+                for (const field in data.errors) {
+                    data.errors[field].forEach(error => {
+                        showToast(error, 'error');
+                    });
+                }
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('خطایی رخ داد', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    });
+
+    // ============ AJAX Submit فرم ثبت نام ============
+    document.getElementById('registerForm')?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const formData = new FormData(form);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'در حال ثبت نام...';
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('ثبت نام با موفقیت انجام شد', 'success');
+                setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                }, 800);
+            } else {
+                for (const field in data.errors) {
+                    data.errors[field].forEach(error => {
+                        showToast(error, 'error');
+                    });
+                }
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('خطایی رخ داد', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
+    });
+
+    // ============ هندل کردن URL params ============
     const urlParams = new URLSearchParams(window.location.search);
     const modalParam = urlParams.get('modal');
-
+    const nextParam = urlParams.get('next');
 
     if (modalParam === 'register') {
         showRegister();
-
         const url = new URL(window.location.href);
         url.searchParams.delete('modal');
         window.history.replaceState({}, '', url);
     } else if (modalParam === 'open' || modalParam === 'login') {
-        openModal();
-
+        openModal(nextParam);
         const url = new URL(window.location.href);
         url.searchParams.delete('modal');
         window.history.replaceState({}, '', url);
-    } else {
-
-        let hasLoginError = false;
-        {% for message in messages %}
-            if ("{{ message.tags }}" === "error") {
-
-                const messageText = "{{ message }}";
-                if (messageText.includes('ایمیل') || messageText.includes('رمز') || messageText.includes('ثبت نام')) {
-
-                    if (messageText.includes('ثبت نام') || messageText.includes('قبلاً') || messageText.includes('تکرار')) {
-                        showRegister();
-                    } else {
-                        openModal();
-                    }
-                } else {
-                    openModal();
-                }
-            }
-        {% endfor %}
     }
 </script>
 <script>
@@ -280,6 +374,66 @@
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // ---------- پنل «دسته بندی ها» ----------
+        const catToggle = document.getElementById('category-toggle');
+        const catPanel = document.getElementById('category-panel');
+        const catChevron = document.getElementById('category-chevron');
+
+        if (catToggle && catPanel && catChevron) {
+            catToggle.addEventListener('click', () => {
+                const isOpen = catToggle.getAttribute('aria-expanded') === 'true';
+                catToggle.setAttribute('aria-expanded', String(!isOpen));
+                catPanel.classList.toggle('hidden', isOpen);
+                catChevron.classList.toggle('rotate-180', !isOpen);
+            });
+        }
+
+        // ---------- زیرمنوهای menu_item ----------
+        document.querySelectorAll('.menu-toggle').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const li = btn.closest('li');
+                const submenu = li?.querySelector(':scope > .submenu');
+                const icon = btn.querySelector('.menu-toggle-icon');
+                if (!submenu) return;
+
+                const isOpen = !submenu.classList.contains('hidden');
+
+                if (isOpen) {
+                    // بستن با انیمیشن
+                    submenu.style.height = submenu.scrollHeight + 'px';
+                    requestAnimationFrame(() => {
+                        submenu.style.height = '0';
+                    });
+                    submenu.addEventListener('transitionend', function handler() {
+                        submenu.classList.add('hidden');
+                        submenu.style.height = '';
+                        submenu.removeEventListener('transitionend', handler);
+                    });
+                } else {
+                    // باز کردن با انیمیشن
+                    submenu.classList.remove('hidden');
+                    submenu.style.height = '0';
+                    requestAnimationFrame(() => {
+                        submenu.style.height = submenu.scrollHeight + 'px';
+                    });
+                    submenu.addEventListener('transitionend', function handler() {
+                        submenu.style.height = '';
+                        submenu.removeEventListener('transitionend', handler);
+                    });
+                }
+
+                icon?.classList.toggle('rotate-180', !isOpen);
+            });
+        });
+
+    });
+</script>
 
 {% include 'messages.html' %}
 

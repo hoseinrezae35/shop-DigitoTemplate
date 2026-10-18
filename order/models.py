@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-
+from django.db import transaction
 from accounts.models import User
 from dashboard.models import UserAddressModel
 from shop.models import Product
@@ -70,7 +70,9 @@ class Order(models.Model):
 
     postal_code = models.CharField(
         max_length=20,
-        verbose_name="کد پستی"
+        verbose_name="کد پستی",
+        blank=True,
+        null=True,
     )
 
     shipping_address = models.CharField(
@@ -145,6 +147,13 @@ class Order(models.Model):
         verbose_name="آخرین بروزرسانی"
     )
 
+    payment_expires_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        verbose_name="تاریخ انقضای پرداخت"
+    )
+
     class Meta:
         ordering = ["-created_at"]
 
@@ -162,6 +171,47 @@ class Order(models.Model):
                 + tax
                 + self.shipping_cost
         )
+
+    def release_reserved_stock(self):
+        if self.status != OrderStatus.PENDING:
+            return False
+
+        with transaction.atomic():
+            order = (
+                Order.objects
+                .select_for_update()
+                .prefetch_related("items__product")
+                .get(pk=self.pk)
+            )
+
+            if order.status != OrderStatus.PENDING:
+                return False
+
+            for item in order.items.all():
+                product = (
+                    Product.objects
+                    .select_for_update()
+                    .get(pk=item.product_id)
+                )
+
+                product.stock += item.quantity
+
+                product.save(
+                    update_fields=[
+                        "stock",
+                        "updated_at",
+                    ]
+                )
+
+            order.status = OrderStatus.CANCELED
+            order.save(
+                update_fields=[
+                    "status",
+                    "updated_at",
+                ]
+            )
+
+        return True
 
 
 class OrderItem(models.Model):
