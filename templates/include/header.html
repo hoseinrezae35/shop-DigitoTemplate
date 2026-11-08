@@ -1,6 +1,7 @@
 {% load static %}
 
-<header>
+<header id="site-header" class="bg-white"
+        style="position: fixed; top: 0; left: 0; right: 0; width: 100%; z-index: 1000; background-color: #ffffff; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);">
     <!-- top header -->
     <div class="flex justify-between bg-white shadow-lg px-4 md:px-8 lg:px-14 py-5 relative">
         <div class="flex justify-between items-center gap-x-5 w-full md:w-auto">
@@ -115,8 +116,8 @@
                     <div class="text-zinc-600 text-xs lg:text-sm">
                         همین حالا با پشتیبانی تماس بگیر
                     </div>
-                    <a href="tel:05144556677" class="text-primary-500 flex text-xs lg:text-base gap-x-1 items-start">
-                        051-44556677
+                    <a href="tel:{{ personal_information.phone_number }}" class="text-primary-500 flex text-xs lg:text-base gap-x-1 items-start">
+                        {{ personal_information.phone_number }}
                         <img class="w-3 lg:w-5" src="{% static 'image/icons/headphones.svg' %}" alt="">
                     </a>
                 </div>
@@ -151,8 +152,8 @@
             <div class="text-zinc-300">
                 |
             </div>
-            <a href="tel:05144556677" class="text-primary-500 flex text-xs lg:text-base gap-x-1 items-start">
-                051-44556677
+            <a href="tel:{{ personal_information.phone_number }}" class="text-primary-500 flex text-xs lg:text-base gap-x-1 items-start">
+                {{ personal_information.phone_number }}
                 <img class="w-3 lg:w-5" src="{% static 'image/icons/headphones.svg' %}" alt="">
             </a>
         </div>
@@ -421,3 +422,33 @@
         </div>
     </div>
 </header>
+
+<!-- فضای رزرو شده برای جلوگیری از رفتن محتوای صفحه به زیر هدر ثابت -->
+<div id="site-header-spacer" aria-hidden="true"></div>
+
+<script>
+    (function () {
+        const header = document.getElementById('site-header');
+        const spacer = document.getElementById('site-header-spacer');
+
+        if (!header || !spacer) return;
+
+        function syncHeaderHeight() {
+            spacer.style.height = header.getBoundingClientRect().height + 'px';
+        }
+
+        // تنظیم اولیه، پیش از ادامه بارگذاری محتوای صفحه
+        syncHeaderHeight();
+
+        // هماهنگ‌سازی در تغییر اندازه صفحه و تغییر ارتفاع احتمالی هدر
+        window.addEventListener('resize', syncHeaderHeight, {passive: true});
+
+        if ('ResizeObserver' in window) {
+            const observer = new ResizeObserver(syncHeaderHeight);
+            observer.observe(header);
+        }
+
+        // پس از بارگذاری فونت‌ها و تصاویر نیز ارتفاع را دوباره بررسی کن
+        window.addEventListener('load', syncHeaderHeight, {once: true});
+    })();
+</script>

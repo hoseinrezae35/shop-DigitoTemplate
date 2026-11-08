@@ -1,5 +1,7 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
+{% load humanize %}
+{% load jalali_suite %}
 
 {% block content %}
     <div class="bg-white rounded-2xl min-h-80 h-auto shadow-custom p-4">
@@ -105,13 +107,13 @@
 
                         <td class="p-4">
                             <p class="block text-sm">
-                                {{ order.created_at }}
+                                {{ order.created_at|jalali:"%Y/%m/%d - %H:%M" }}
                             </p>
                         </td>
 
                         <td class="p-4">
                             <p class="block text-sm">
-                                {{ order.calculate_final_price }} تومان
+                                {{ order.calculate_final_price|intcomma }} تومان
                             </p>
                         </td>
 

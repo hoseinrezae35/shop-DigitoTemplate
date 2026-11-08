@@ -15,6 +15,7 @@ urlpatterns = [
     path('contactus/', include('contactus.urls')),
     path('payment/', include('payment.urls')),
     path('blog/', include('blogs.urls')),
+    path('adminpanel/', include('adminpanel.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL,

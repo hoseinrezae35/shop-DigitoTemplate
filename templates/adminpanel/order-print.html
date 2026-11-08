@@ -1,0 +1,426 @@
+{% load humanize %}
+{% load jalali_suite %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>برگه سفارش #{{ order.id }}</title>
+    <style>
+        /* ---------- پایه ---------- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Vazirmatn", "IRANSans", Tahoma, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .sheet {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: #fff;
+            padding: 14mm 12mm;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
+        }
+
+        /* ---------- هدر ---------- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .brand p {
+            margin: 4px 0 0;
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .meta {
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .meta .row {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .meta .label {
+            color: #64748b;
+        }
+
+        .meta .value {
+            font-weight: 700;
+        }
+
+        /* ---------- بخش‌ها ---------- */
+        .section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: #0f172a;
+            border-right: 3px solid #0f172a;
+            padding-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* ---------- گرید اطلاعات ---------- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 24px;
+            font-size: 12px;
+        }
+
+        .info-grid .item {
+            display: flex;
+            gap: 6px;
+        }
+
+        .info-grid .k {
+            color: #64748b;
+            min-width: 72px;
+        }
+
+        .info-grid .v {
+            font-weight: 600;
+        }
+
+        .info-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        /* ---------- جدول اقلام ---------- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        thead th {
+            background: #0f172a;
+            color: #fff;
+            font-weight: 700;
+            padding: 8px 10px;
+            text-align: right;
+        }
+
+        thead th.num {
+            text-align: left;
+            width: 90px;
+        }
+
+        thead th.qty {
+            text-align: center;
+            width: 60px;
+        }
+
+        tbody td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody td.num {
+            text-align: left;
+            font-variant-numeric: tabular-nums;
+        }
+
+        tbody td.qty {
+            text-align: center;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ---------- جمع‌بندی ---------- */
+        .totals {
+            margin-top: 12px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .totals table {
+            width: 55%;
+        }
+
+        .totals td {
+            padding: 5px 10px;
+            border: none;
+        }
+
+        .totals td.k {
+            color: #475569;
+        }
+
+        .totals td.v {
+            text-align: left;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .totals tr.grand td {
+            border-top: 2px solid #0f172a;
+            font-size: 14px;
+            font-weight: 800;
+            padding-top: 8px;
+        }
+
+        /* ---------- وضعیت ---------- */
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        /* ---------- توضیحات ---------- */
+        .notes {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #334155;
+        }
+
+        /* ---------- امضا ---------- */
+        .signatures {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .sign-box {
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 8px;
+            text-align: center;
+        }
+
+        .footer-note {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        /* ---------- دکمه چاپ (فقط روی صفحه) ---------- */
+        .no-print {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .no-print button, .no-print a {
+            background: #0f172a;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .no-print a {
+            background: #fff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* ---------- چاپ ---------- */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+                font-size: 12px;
+            }
+
+            .sheet {
+                width: 100%;
+                min-height: auto;
+                box-shadow: none;
+                padding: 12mm 10mm;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            thead th {
+                background: #0f172a !important;
+                color: #fff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .status-badge, .notes {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="no-print">
+    <button onclick="window.print()">چاپ برگه</button>
+    <a href="{% url 'adminpanel:order-list' %}">بازگشت</a>
+</div>
+
+<div class="sheet">
+
+    <!-- هدر -->
+    <div class="header">
+        <div class="brand">
+            <h1>برگه سفارش</h1>
+            <p>سامانه مدیریت سفارش‌ها</p>
+        </div>
+        <div class="meta">
+            <div class="row"><span class="label">شماره سفارش:</span><span class="value">#{{ order.id }}</span></div>
+            <div class="row"><span class="label">تاریخ ثبت:</span><span
+                    class="value">{{ order.created_at|jalali:"%Y/%m/%d - %H:%M" }}</span></div>
+            <div class="row"><span class="label">وضعیت:</span>
+                <span class="value">
+                        {% if order.status == 'paid' %}پرداخت شده
+                        {% elif order.status == 'shipped' %}ارسال شده
+                        {% elif order.status == 'delivered' %}تحویل داده شده
+                        {% elif order.status == 'canceled' %}لغو شده
+                        {% elif order.status == 'pending' %}در انتظار پرداخت
+                        {% elif order.status == 'processing' %}در حال پردازش
+                        {% endif %}
+                    </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- اطلاعات گیرنده -->
+    <div class="section">
+        <div class="section-title">اطلاعات گیرنده</div>
+        <div class="info-grid">
+            <div class="item"><span class="k">نام گیرنده:</span><span
+                    class="v">{{ order.first_name }} {{ order.last_name }}</span></div>
+            <div class="item"><span class="k">شماره تماس:</span><span class="v">{{ order.phone_number }}</span></div>
+            <div class="item"><span class="k">استان:</span><span class="v">{{ order.state }}</span></div>
+            <div class="item"><span class="k">شهر:</span><span class="v">{{ order.city }}</span></div>
+            <div class="item"><span class="k">کد پستی:</span><span class="v">{{ order.postal_code|default:"—" }}</span>
+            </div>
+            <div class="item"><span class="k">روش دریافت:</span><span
+                    class="v">{{ order.get_shipping_method_display }}</span></div>
+            <div class="item full"><span class="k">آدرس:</span><span class="v">{{ order.shipping_address }}</span></div>
+            {% if order.tracking_code %}
+                <div class="item"><span class="k">کد پیگیری:</span><span class="v">{{ order.tracking_code }}</span>
+                </div>
+            {% endif %}
+            <div class="item"><span class="k">ایمیل کاربر:</span><span class="v">{{ order.user.email }}</span></div>
+        </div>
+    </div>
+
+    <!-- اقلام سفارش -->
+    <div class="section">
+        <div class="section-title">اقلام سفارش</div>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>نام محصول</th>
+                <th class="qty">تعداد</th>
+                <th class="num">قیمت واحد (تومان)</th>
+                <th class="num">جمع (تومان)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in order.items.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.product_name }}</td>
+                    <td class="qty">{{ item.quantity }}</td>
+                    <td class="num">{{ item.price|intcomma }}</td>
+                    <td class="num">{{ item.total_price|intcomma }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center;color:#94a3b8;">آیتمی ثبت نشده است.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- جمع‌بندی -->
+        <div class="totals">
+            <table>
+                <tr>
+                    <td class="k">مبلغ کالاها</td>
+                    <td class="v">{{ order.total_price|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td class="k">مالیات ({{ order.tax_percent }}٪)</td>
+                    <td class="v">{{ order.tax_amount|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td class="k">هزینه ارسال</td>
+                    <td class="v">{{ order.shipping_cost|intcomma }}</td>
+                </tr>
+                <tr class="grand">
+                    <td class="k">مبلغ نهایی</td>
+                    <td class="v">{{ order.final_price|intcomma }} تومان</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- توضیحات -->
+    <div class="section-title">توضیحات</div>
+    {% if order.description %}
+        <div class="section">
+            <div class="notes">{{ order.description|linebreaksbr }}</div>
+        </div>
+    {% endif %}
+
+    <!-- امضا -->
+    <div class="signatures">
+        <div class="sign-box">مهر و امضای فروشنده</div>
+        <div class="sign-box">امضای گیرنده</div>
+    </div>
+
+</div>
+
+</body>
+</html>

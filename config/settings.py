@@ -23,6 +23,8 @@ INSTALLED_APPS = [
 
     # my_app
     'ckeditor',
+    "django.contrib.humanize",
+
     'home.apps.HomeConfig',
     'accounts.apps.AccountsConfig',
     'shop.apps.ShopConfig',
@@ -34,6 +36,7 @@ INSTALLED_APPS = [
     'abouts.apps.AboutsConfig',
     'contactus.apps.ContactusConfig',
     'adminpanel.apps.AdminpanelConfig',
+    'jalali_suite',
 
 ]
 
@@ -60,7 +63,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.category_menu',
-                "cart.context_processors.cart_session"
+                "cart.context_processors.cart_session",
+                "abouts.context_processors.personal_information",
             ],
         },
     },
@@ -101,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = config('TIME_ZONE', default='UTC')
+TIME_ZONE = config('TIME_ZONE', default='Asia/Tehran')
 
 USE_I18N = True
 
@@ -129,6 +133,16 @@ LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": BASE_DIR / "django_cache",
+        "TIMEOUT": 60 * 15,
+        "OPTIONS": {
+            "MAX_ENTRIES": 1000,
+        },
+    }
+}
 
 # zarinpal
 ZARINPAL_MERCHANT_ID = config("ZARINPAL_MERCHANT_ID", default="d8abf83c-d62a-4bde-889d-628b3812a99d")

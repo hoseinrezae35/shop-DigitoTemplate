@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% load static %}
 
 {% block content %}
@@ -17,7 +18,7 @@
         </a>
         <div class="h-0.5 w-full bg-gradient-to-r from-white via-zinc-300 to-white"></div>
         <a class="flex flex-col md:flex-row items-center w-fit min-w-24 md:min-w-32 gap-1 text-primary-500 text-sm"
-           href="cart.html">
+           href="#">
             <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path class="fill-primary-700"
                       d="M12 10C14.2091 10 16 8.20914 16 6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6C8 8.20914 9.79086 10 12 10Z"
@@ -312,7 +313,7 @@
                     <div class="flex items-center">
 
                         <div class="text-2xl md:text-4xl font-yekanBakhBold">
-                            {{ final_price }}
+                            {{ final_price|intcomma }}
                         </div>
 
                         <div class="-rotate-90 text-xs">
@@ -333,7 +334,7 @@
                     <div class="flex items-center">
 
                         <div class="md:text-xl">
-                            {{ cart_total }}
+                            {{ cart_total|intcomma }}
                         </div>
 
                         <div class="-rotate-90 text-[0.6rem]">
@@ -354,7 +355,7 @@
                     <div class="flex items-center">
 
                         <div class="md:text-xl">
-                            {{ tax_amount }}
+                            {{ tax_amount|intcomma }}
                         </div>
 
                         <div class="-rotate-90 text-[0.6rem]">

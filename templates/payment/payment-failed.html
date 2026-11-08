@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load jalali_suite %}
+{% load humanize %}
 
 {% block content %}
     <div class="w-full max-w-4xl mx-auto px-4 py-8">
@@ -60,7 +61,7 @@
                 </span>
 
                     <span class="font-yekanBakhExtraBold text-gray-800">
-                    {{ order.final_price|floatformat:0 }} تومان
+                    {{ order.final_price|intcomma }} تومان
                 </span>
                 </div>
 
@@ -103,7 +104,7 @@
                         </div>
 
                         <div class="shrink-0 text-sm font-yekanBakhExtraBold text-gray-800">
-                            {{ item.total_price|floatformat:0 }}
+                            {{ item.total_price|intcomma }}
 
                             <span class="text-xs font-normal text-gray-500">
                             تومان
@@ -130,7 +131,7 @@
                 </span>
 
                     <span class="font-yekanBakhExtraBold text-gray-800">
-                    {{ order.total_price|floatformat:0 }} تومان
+                    {{ order.total_price|intcomma }} تومان
                 </span>
                 </div>
 
@@ -140,7 +141,7 @@
                 </span>
 
                     <span class="font-yekanBakhExtraBold text-gray-800">
-                    {{ order.tax_amount|floatformat:0 }} تومان
+                    {{ order.tax_amount|intcomma }} تومان
                 </span>
                 </div>
 
@@ -150,7 +151,7 @@
                 </span>
 
                     <span class="font-yekanBakhExtraBold text-gray-800">
-                    {{ order.shipping_cost|floatformat:0 }} تومان
+                    {{ order.shipping_cost|intcomma }} تومان
                 </span>
                 </div>
 
@@ -161,7 +162,7 @@
                 </span>
 
                     <span class="text-lg font-yekanBakhExtraBold text-red-600">
-                    {{ order.final_price|floatformat:0 }} تومان
+                    {{ order.final_price|intcomma }} تومان
                 </span>
 
                 </div>
@@ -223,7 +224,6 @@
                 >
                     مشاهده جزئیات سفارش
                 </a>
-
 
 
                 <a

@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <div class="containerPSlider swiper">
     <div class="productSlider1">
@@ -81,7 +82,7 @@
                             {% if product.discount_price %}
                                 <div class="flex items-center gap-2">
                                     <span class="text-gray-400 line-through text-lg">
-                                        {{ product.price }}
+                                        {{ product.price|intcomma }}
                                     </span>
                                     <span class="text-xs text-gray-500">
                                             تومان
@@ -89,7 +90,7 @@
                                 </div>
                                 <div class="flex items-center gap-2 mt-1">
                                     <span class="font-yekanBakhExtraBold text-3xl text-red-600">
-                                        {{ product.discount_price }}
+                                        {{ product.discount_price|intcomma }}
                                     </span>
                                     <span class="text-sm">
                                         تومان
@@ -102,7 +103,7 @@
                             {% else %}
                                 <div class="flex items-center gap-2">
                                     <span class="font-yekanBakhExtraBold text-3xl">
-                                        {{ product.price }}
+                                        {{ product.price|intcomma }}
                                     </span>
                                     <span class="text-sm">
                                         تومان

@@ -213,6 +213,19 @@ class Order(models.Model):
 
         return True
 
+    STATUS_TRANSITIONS = {
+        OrderStatus.PAID: (OrderStatus.SHIPPED, "ارسال"),
+        OrderStatus.SHIPPED: (OrderStatus.DELIVERED, "تحویل شد"),
+    }
+
+    def get_next_transition(self):
+
+        return self.STATUS_TRANSITIONS.get(self.status)
+
+    def can_transition_to(self, new_status):
+        transition = self.STATUS_TRANSITIONS.get(self.status)
+        return transition is not None and transition[0] == new_status
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(

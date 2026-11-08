@@ -90,6 +90,12 @@ class ProductListView(ListView):
         return queryset
 
 
+from django.db.models import F
+from django.views.generic import DetailView
+
+from .models import Product, ProductFavorite
+
+
 class ProductDetailView(DetailView):
     model = Product
     template_name = "shop/product-detail.html"
@@ -102,15 +108,25 @@ class ProductDetailView(DetailView):
             is_available=True
         )
 
+    def get_object(self, queryset=None):
+        product = super().get_object(queryset)
+
+        Product.objects.filter(
+            pk=product.pk
+        ).update(
+            views=F("views") + 1
+        )
+
+        product.refresh_from_db(fields=["views"])
+
+        return product
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["comments"] = self.object.comments.filter(
-            is_active=True
-        )
-        context["comments_count"] = self.object.comments.filter(
-            is_active=True
-        ).count()
+        context["comments"] = self.object.comments.filter(is_active=True)
+
+        context["comments_count"] = context["comments"].count()
 
         context["is_favorite"] = False
 

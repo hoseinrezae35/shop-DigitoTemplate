@@ -1,3 +1,7 @@
+{% load static %}
+{% load humanize %}
+{% load jalali_suite %}
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -6,6 +10,7 @@
     <title>جزئیات سفارش | دیجیتو</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,22 +19,26 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        html, body {
+            overflow-x: hidden;
+        }
+
         body {
             background: #f8f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 2rem 1rem;
+            padding: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 2vw, 1rem);
         }
 
         .digito-card-red {
             max-width: 1100px;
             width: 100%;
             background: #ffffff;
-            border-radius: 40px;
+            border-radius: clamp(24px, 4vw, 40px);
             box-shadow: 0 25px 50px -12px rgba(180, 30, 30, 0.15);
-            padding: 2rem 2.5rem;
+            padding: clamp(1.2rem, 3vw, 2rem) clamp(1.2rem, 3.5vw, 2.5rem);
             transition: all 0.2s ease;
             border: 1px solid rgba(255, 255, 255, 0.3);
             position: relative;
@@ -47,6 +56,7 @@
             background: radial-gradient(circle, #dc26260a, transparent 70%);
             border-radius: 50%;
             z-index: 0;
+            pointer-events: none;
         }
 
         .digito-card-red > * {
@@ -60,6 +70,7 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 1rem;
             margin-bottom: 2rem;
             border-bottom: 1px solid #f0e8e8;
             padding-bottom: 1.2rem;
@@ -82,10 +93,11 @@
             color: white;
             font-size: 26px;
             box-shadow: 0 10px 20px -8px #dc262666;
+            flex-shrink: 0;
         }
 
         .logo-text {
-            font-size: 28px;
+            font-size: clamp(20px, 4vw, 28px);
             font-weight: 800;
             letter-spacing: -0.5px;
             background: linear-gradient(135deg, #1e1e2f, #dc2626);
@@ -100,7 +112,7 @@
         }
 
         .back-btn {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
             background: #fdf0f0;
@@ -112,6 +124,7 @@
             transition: 0.2s;
             cursor: pointer;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .back-btn i {
@@ -133,19 +146,20 @@
         .order-title-section {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             flex-wrap: wrap;
             margin-bottom: 2rem;
             gap: 1rem;
         }
 
         .order-title-section h1 {
-            font-size: 2rem;
+            font-size: clamp(1.3rem, 3vw, 2rem);
             font-weight: 700;
             color: #1f1a2e;
             display: flex;
             align-items: center;
             gap: 14px;
+            flex-wrap: wrap;
         }
 
         .order-title-section h1 i {
@@ -154,10 +168,10 @@
         }
 
         .order-title-section .status-badge-large {
-            padding: 0.5rem 2rem;
+            padding: 0.5rem 1.6rem;
             border-radius: 60px;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -177,11 +191,11 @@
         /* گرید اطلاعات سفارش */
         .order-details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
             background: #fcf8f8;
-            padding: 1.8rem 2rem;
-            border-radius: 28px;
+            padding: clamp(1.2rem, 2.5vw, 1.8rem) clamp(1.2rem, 3vw, 2rem);
+            border-radius: clamp(20px, 3vw, 28px);
             border: 1px solid #f5eaea;
             margin-bottom: 2.5rem;
         }
@@ -190,6 +204,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            min-width: 0;
         }
 
         .detail-item .label {
@@ -201,18 +216,21 @@
         }
 
         .detail-item .value {
-            font-size: 1.1rem;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
             font-weight: 700;
             color: #1e1a2b;
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
+            word-break: break-word;
         }
 
         .detail-item .value i {
             color: #dc2626;
             width: 20px;
             font-size: 1rem;
+            flex-shrink: 0;
         }
 
         .detail-item .value .sub {
@@ -226,11 +244,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
             margin: 1.8rem 0 1.2rem 0;
         }
 
         .products-header h3 {
-            font-size: 1.3rem;
+            font-size: clamp(1.05rem, 2vw, 1.3rem);
             font-weight: 700;
             color: #1f1a2e;
             display: flex;
@@ -264,17 +284,22 @@
             border-radius: 16px;
             border: 1px solid #f5ecec;
             transition: 0.2s;
+            vertical-align: middle;
         }
 
-        .products-table tr:hover td {
-            background: #fffbfb;
-            border-color: #fad7d7;
+        /* هاور فقط روی دستگاه‌های ماوس‌دار */
+        @media (hover: hover) and (pointer: fine) {
+            .products-table tbody tr:hover td {
+                background: #fffbfb;
+                border-color: #fad7d7;
+            }
         }
 
         .product-cell {
             display: flex;
             align-items: center;
             gap: 14px;
+            min-width: 0;
         }
 
         .product-thumb {
@@ -288,11 +313,13 @@
             color: #dc2626;
             font-size: 22px;
             border: 1px solid #f0d7d7;
+            flex-shrink: 0;
         }
 
         .product-name {
             font-weight: 600;
             color: #1f1a2e;
+            word-break: break-word;
         }
 
         .product-name small {
@@ -305,6 +332,7 @@
         .price-highlight {
             font-weight: 700;
             color: #1f1a2e;
+            white-space: nowrap;
         }
 
         .price-highlight .unit {
@@ -317,19 +345,20 @@
         .order-summary-box {
             margin-top: 2.5rem;
             background: #fcf8f8;
-            border-radius: 28px;
-            padding: 1.8rem 2.2rem;
+            border-radius: clamp(20px, 3vw, 28px);
+            padding: clamp(1.2rem, 2.5vw, 1.8rem) clamp(1.2rem, 3vw, 2.2rem);
             border: 1px solid #f5eaea;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            gap: 1.2rem;
         }
 
         .summary-details {
             display: flex;
             flex-wrap: wrap;
-            gap: 2rem 3.5rem;
+            gap: 1.2rem 3.5rem;
         }
 
         .summary-row {
@@ -353,17 +382,18 @@
         .summary-row .item .value {
             font-weight: 700;
             color: #1e1a2b;
-            font-size: 1.05rem;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
         }
 
         .total-amount {
-            font-size: 1.8rem;
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
             font-weight: 800;
             color: #dc2626;
             background: #fef1f1;
             padding: 0.4rem 2rem;
             border-radius: 60px;
             border: 1px solid #fad7d7;
+            white-space: nowrap;
         }
 
         .total-amount small {
@@ -392,6 +422,7 @@
             cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             font-size: 1rem;
         }
@@ -417,7 +448,9 @@
             cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
+            text-decoration: none;
         }
 
         .btn-outline-red i {
@@ -468,68 +501,176 @@
             .no-print {
                 display: none !important;
             }
+
+            body {
+                background: #fff;
+                padding: 0;
+            }
+
+            .digito-card-red {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+            }
         }
 
-        /* ریسپانسیو */
+        /* ===== تبلت ===== */
         @media screen and (max-width: 800px) {
-            .digito-card-red {
-                padding: 1.5rem;
-            }
-
             .order-details-grid {
                 grid-template-columns: 1fr 1fr;
-                padding: 1.2rem;
-            }
-
-            .products-table th,
-            .products-table td {
-                padding: 0.8rem;
-                font-size: 0.9rem;
-            }
-
-            .order-summary-box {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 1.2rem;
-            }
-
-            .total-amount {
-                align-self: flex-start;
             }
 
             .summary-row {
                 flex-direction: column;
                 gap: 0.8rem;
             }
+
+            .order-summary-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .total-amount {
+                align-self: flex-start;
+            }
         }
 
-        @media screen and (max-width: 500px) {
+        /* ===== موبایل: جدول به کارت تبدیل می‌شه ===== */
+        @media screen and (max-width: 640px) {
+            .digito-header {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .back-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .order-title-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
             .order-details-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
 
-            .order-title-section h1 {
-                font-size: 1.5rem;
+            /* جدول کارتی */
+            .products-table,
+            .products-table thead,
+            .products-table tbody,
+            .products-table tr,
+            .products-table td {
+                display: block;
+                width: 100%;
             }
 
-            .logo-text {
-                font-size: 22px;
-            }
-
-            .back-btn {
-                padding: 0.4rem 1.2rem;
-                font-size: 0.9rem;
+            .products-table thead {
+                /* هدر جدول در موبایل مخفی می‌شه */
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                white-space: nowrap;
             }
 
             .products-table {
-                font-size: 0.8rem;
+                border-spacing: 0;
+            }
+
+            .products-table tbody tr {
+                background: #fcf9f9;
+                border: 1px solid #f5ecec;
+                border-radius: 18px;
+                padding: 0.8rem 1rem;
+                margin-bottom: 0.8rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .products-table tbody tr:hover td {
+                background: transparent;
+                border-color: transparent;
+            }
+
+            .products-table td {
+                background: transparent;
+                border: none;
+                border-radius: 0;
+                padding: 0.35rem 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .products-table td::before {
+                content: attr(data-label);
+                font-size: 0.78rem;
+                color: #8a7a7a;
+                font-weight: 600;
+                flex-shrink: 0;
+            }
+
+            .products-table td:first-child {
+                padding-top: 0;
+                padding-bottom: 0.6rem;
+                border-bottom: 1px dashed #f0e0e0;
+                margin-bottom: 0.3rem;
+            }
+
+            .products-table td:first-child::before {
+                display: none;
+            }
+
+            .product-cell {
+                width: 100%;
             }
 
             .product-thumb {
-                width: 40px;
-                height: 40px;
+                width: 42px;
+                height: 42px;
                 font-size: 18px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary-red,
+            .btn-outline-red {
+                width: 100%;
+                padding: 0.85rem 1rem;
+            }
+
+            .total-amount {
+                align-self: stretch;
+                text-align: center;
+            }
+        }
+
+        /* ===== موبایل کوچک ===== */
+        @media screen and (max-width: 400px) {
+            .order-title-section h1 {
+                font-size: 1.15rem;
+            }
+
+            .status-badge-large {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .summary-details {
+                width: 100%;
+            }
+
+            .summary-row .item {
+                width: 100%;
             }
         }
     </style>
@@ -541,12 +682,12 @@
     <!-- هدر با دکمه بازگشت -->
     <div class="digito-header no-print">
         <div class="logo-area">
-            <div class="logo-icon-red"><i class="fas fa-bolt"></i></div>
+            <div class="logo-icon-red"><i class="fas fa-bolt" aria-hidden="true"></i></div>
             <div class="logo-text">دیجیتو<span>.</span></div>
         </div>
 
         <a href="{% url 'dashboard:index' %}" class="back-btn">
-            <i class="fas fa-arrow-right"></i> بازگشت به لیست
+            <i class="fas fa-arrow-right" aria-hidden="true"></i> بازگشت به لیست
         </a>
     </div>
 
@@ -554,34 +695,36 @@
     <!-- عنوان سفارش و وضعیت -->
     <div class="order-title-section">
         <h1>
-            <i class="fas fa-receipt"></i>
+            <i class="fas fa-receipt" aria-hidden="true"></i>
             سفارش #{{ order.id }}
         </h1>
 
+        {% with s=order.status %}
         <span class="status-badge-large
-            {% if order.status == 'pending' %}status-pending
-            {% elif order.status == 'paid' %}status-paid
-            {% elif order.status == 'processing' %}status-processing
-            {% elif order.status == 'shipped' %}status-shipped
-            {% elif order.status == 'delivered' %}status-delivered-red
-            {% elif order.status == 'canceled' %}status-canceled
+            {% if s == 'pending' %}status-pending
+            {% elif s == 'paid' %}status-paid
+            {% elif s == 'processing' %}status-processing
+            {% elif s == 'shipped' %}status-shipped
+            {% elif s == 'delivered' %}status-delivered-red
+            {% elif s == 'canceled' %}status-canceled
             {% endif %}">
 
-            {% if order.status == 'pending' %}
-                <i class="fas fa-clock"></i>
-            {% elif order.status == 'paid' %}
-                <i class="fas fa-check-circle"></i>
-            {% elif order.status == 'processing' %}
-                <i class="fas fa-spinner"></i>
-            {% elif order.status == 'shipped' %}
-                <i class="fas fa-truck"></i>
-            {% elif order.status == 'delivered' %}
-                <i class="fas fa-check-circle"></i>
-            {% elif order.status == 'canceled' %}
-                <i class="fas fa-times-circle"></i>
+            {% if s == 'pending' %}
+                <i class="fas fa-clock" aria-hidden="true"></i>
+            {% elif s == 'paid' %}
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+            {% elif s == 'processing' %}
+                <i class="fas fa-spinner" aria-hidden="true"></i>
+            {% elif s == 'shipped' %}
+                <i class="fas fa-truck" aria-hidden="true"></i>
+            {% elif s == 'delivered' %}
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+            {% elif s == 'canceled' %}
+                <i class="fas fa-times-circle" aria-hidden="true"></i>
             {% endif %}
             {{ order.get_status_display }}
         </span>
+        {% endwith %}
     </div>
 
 
@@ -590,16 +733,16 @@
 
         <div class="detail-item">
             <span class="label">
-                <i class="fas fa-calendar-alt"
+                <i class="fas fa-calendar-alt" aria-hidden="true"
                    style="color:#dc2626; margin-left:4px;"></i>
                 تاریخ ثبت
             </span>
 
             <span class="value">
-                <i class="fas fa-calendar-day"></i>
-                {{ order.created_at|date:"Y/m/d" }}
+                <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                {{ order.created_at|jalali:"%Y/%m/%d" }}
                 <span class="sub">
-                    ساعت {{ order.created_at|date:"H:i" }}
+                    ساعت {{ order.created_at|jalali:"%H:%M" }}
                 </span>
             </span>
         </div>
@@ -607,13 +750,13 @@
 
         <div class="detail-item">
             <span class="label">
-                <i class="fas fa-truck"
+                <i class="fas fa-truck" aria-hidden="true"
                    style="color:#dc2626; margin-left:4px;"></i>
                 روش ارسال
             </span>
 
             <span class="value">
-                <i class="fas fa-shipping-fast"></i>
+                <i class="fas fa-shipping-fast" aria-hidden="true"></i>
                 {{ order.get_shipping_method_display }}
             </span>
         </div>
@@ -621,13 +764,13 @@
 
         <div class="detail-item">
             <span class="label">
-                <i class="fas fa-credit-card"
+                <i class="fas fa-credit-card" aria-hidden="true"
                    style="color:#dc2626; margin-left:4px;"></i>
                 وضعیت پرداخت
             </span>
 
             <span class="value">
-                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
 
                 {% if order.payment_status == "success" %}
                     پرداخت شده
@@ -638,13 +781,13 @@
         </div>
         <div class="detail-item">
             <span class="label">
-                <i class="fas fa-credit-card"
+                <i class="fas fa-credit-card" aria-hidden="true"
                    style="color:#dc2626; margin-left:4px;"></i>
                 وضعیت سفارش
             </span>
 
             <span class="value">
-                <i class="fas fa-check-circle"></i>
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
 
                 {% if order.status == "pending" %}
                     در انتظار پرداخت
@@ -657,13 +800,13 @@
 
         <div class="detail-item">
             <span class="label">
-                <i class="fas fa-map-pin"
+                <i class="fas fa-map-pin" aria-hidden="true"
                    style="color:#dc2626; margin-left:4px;"></i>
                 آدرس تحویل
             </span>
 
             <span class="value">
-                <i class="fas fa-home"></i>
+                <i class="fas fa-home" aria-hidden="true"></i>
                 {{ order.state }}، {{ order.city }}، {{ order.shipping_address }}
 
                 {% if order.postal_code %}
@@ -681,13 +824,13 @@
     <div class="products-header">
 
         <h3>
-            <i class="fas fa-boxes"></i>
-            محصولات سفارش ({{ order.items.count }} مورد)
+            <i class="fas fa-boxes" aria-hidden="true"></i>
+            محصولات سفارش ({{ order.items.all|length }} مورد)
         </h3>
 
         {% if order.tracking_code %}
             <span style="color:#7a6a6a; font-weight:500;">
-                <i class="fas fa-tag" style="color:#dc2626;"></i>
+                <i class="fas fa-tag" aria-hidden="true" style="color:#dc2626;"></i>
                 کد رهگیری: {{ order.tracking_code }}
             </span>
         {% endif %}
@@ -699,10 +842,10 @@
 
         <thead>
         <tr>
-            <th>محصول</th>
-            <th>تعداد</th>
-            <th>قیمت واحد</th>
-            <th>جمع</th>
+            <th scope="col">محصول</th>
+            <th scope="col">تعداد</th>
+            <th scope="col">قیمت واحد</th>
+            <th scope="col">جمع</th>
         </tr>
         </thead>
 
@@ -713,11 +856,11 @@
 
             <tr>
 
-                <td>
+                <td data-label="محصول">
                     <div class="product-cell">
 
                         <div class="product-thumb">
-                            <i class="fas fa-box"></i>
+                            <i class="fas fa-box" aria-hidden="true"></i>
                         </div>
 
                         <div class="product-name">
@@ -734,19 +877,19 @@
                 </td>
 
 
-                <td>
+                <td data-label="تعداد">
                     {{ item.quantity }}
                 </td>
 
 
-                <td class="price-highlight">
-                    {{ item.price|floatformat:0 }}
+                <td class="price-highlight" data-label="قیمت واحد">
+                    {{ item.price|intcomma }}
                     <span class="unit">تومان</span>
                 </td>
 
 
-                <td class="price-highlight">
-                    {{ item.total_price|floatformat:0 }}
+                <td class="price-highlight" data-label="جمع">
+                    {{ item.total_price|intcomma }}
                     <span class="unit">تومان</span>
                 </td>
 
@@ -780,7 +923,7 @@
                     </span>
 
                     <span class="value">
-                        {{ order.total_price|floatformat:0 }}
+                        {{ order.total_price|intcomma }}
                         <span style="font-weight:400; color:#7a6a6a; font-size:0.9rem;">
                             تومان
                         </span>
@@ -799,7 +942,7 @@
                         {% if order.shipping_cost == 0 %}
                             به عهده مشتری
                         {% else %}
-                            {{ order.shipping_cost|floatformat:0 }}
+                            {{ order.shipping_cost|intcomma }}
                             تومان
                         {% endif %}
 
@@ -815,7 +958,7 @@
                     </span>
 
                     <span class="value">
-                        {{ order.tax_amount|floatformat:0 }}
+                        {{ order.tax_amount|intcomma }}
                         تومان
                     </span>
 
@@ -827,7 +970,7 @@
 
 
         <div class="total-amount">
-            {{ order.final_price|floatformat:0 }}
+            {{ order.final_price|intcomma }}
             <small>تومان</small>
         </div>
 
@@ -837,15 +980,15 @@
     <!-- دکمه‌های اقدام -->
     <div class="action-buttons no-print">
 
-        <button type="button" class="btn-primary-red" onclick="window.print()">
-            <i class="fas fa-print"></i>
+        <button type="button" class="btn-primary-red" onclick="window.print()" aria-label="چاپ فاکتور سفارش">
+            <i class="fas fa-print" aria-hidden="true"></i>
             چاپ فاکتور
         </button>
 
-        <button class="btn-outline-red">
-            <i class="fas fa-headset"></i>
+        <a href="{% url 'contactus:contact' %}" class="btn-outline-red">
+            <i class="fas fa-headset" aria-hidden="true"></i>
             پشتیبانی
-        </button>
+        </a>
 
 
     </div>
