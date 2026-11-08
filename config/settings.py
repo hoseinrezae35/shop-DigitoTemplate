@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # my_app
-    'ckeditor',
+
     "django.contrib.humanize",
 
     'home.apps.HomeConfig',
